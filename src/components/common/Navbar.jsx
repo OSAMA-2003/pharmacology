@@ -52,7 +52,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed left-0 right-0 z-[100] w-full flex justify-center transition-transform duration-300
+      className={`fixed left-0 right-0 z-[100] w-full flex justify-center transition-transform duration-400
       ${showNavbar ? "translate-y-0" : "-translate-y-full"}
       ${showMenu ? "top-0" : "top-0 md:top-0 md:px-10"}
       `}
