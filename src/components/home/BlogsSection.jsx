@@ -4,6 +4,7 @@ import { FaBookOpen } from "react-icons/fa6";
 import { blogsData } from "../data"; 
 import Carousel from "../common/Carousel";
 import AnimatedText from "../common/AnimatedContent"; // استيراد المكون
+import { Link } from "react-router-dom";
 
 const BlogsSection = () => {
   return (
@@ -35,12 +36,12 @@ const BlogsSection = () => {
            
 
             <AnimatedText delay={0.4}>
-              <a 
-                href="#" 
+              <Link
+                to="/blogs" 
                 className="text-[#cad5e4] font-bold text-lg hover:underline mb-1 inline-block"
               >
                 مشاهدة كل المقالات
-              </a>
+              </Link>
             </AnimatedText>
           </div>
         </div>
@@ -54,6 +55,7 @@ const BlogsSection = () => {
             ButtonIcon={FaBookOpen}
             buttonText="اقرأ المقال"
             gradientColor="from-[#2d3748]"
+            to={'/blogs/:id'}
           />
         </AnimatedText>
         

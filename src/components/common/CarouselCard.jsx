@@ -9,6 +9,7 @@ const CarouselCard = ({
   buttonText,
   className = "",
   onClick,
+  to
 }) => {
   return (
     <div
@@ -46,7 +47,7 @@ const CarouselCard = ({
         </div>
 
         {/* Content */}
-        <div className="p-5 flex flex-col flex-grow text-right mt-3 pointer-events-none">
+        <div className="p-5 flex flex-col flex-grow text-right mt-3">
           {/* Title */}
           <h4 className="text-xl font-bold gradient-text line-clamp-1 mb-3">
             {item.title}
@@ -90,7 +91,7 @@ const CarouselCard = ({
           </div>
 
           {/* Button */}
-          <Button className="w-full" to={"/consultations"} onClick={onClick}>
+          <Button className="w-full " to={to} >
             <div className="flex justify-center items-center gap-2">
               {ButtonIcon && <ButtonIcon className="text-lg" />}
               {buttonText}

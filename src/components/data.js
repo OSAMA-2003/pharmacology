@@ -157,7 +157,7 @@ export const productsData = [
 export const blogsData = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1511174511562-5f7f18b85462?q=80&w=600&auto=format&fit=crop", 
+    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop",
     category: "تغذية علاجية", 
     title: "كيف تؤثر مقاومة الإنسولين على زيادة الوزن؟",
     desc: "فهم العلاقة بين الإنسولين وتخزين الدهون هو الخطوة الأولى نحو استعادة توازن الجسم. تعد مقاومة الإنسولين سبباً رئيسياً في زيادة الوزن وصعوبة فقدانه في العصر الحديث.",

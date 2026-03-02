@@ -46,6 +46,7 @@ const ConsultationsSection = () => {
             ButtonIcon={FiCalendar}
             buttonText="أحجز موعدك"
             gradientColor="from-[#3a4417]"
+            to={'/consultations/:id'}
           />
         </AnimatedText>
         

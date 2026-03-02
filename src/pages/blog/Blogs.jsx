@@ -26,7 +26,7 @@ const Blogs = () => {
     <div className="min-h-screen pb-16" dir="rtl">
       
       {/* ==================== Hero Section ====================== */}
-      <div className="relative w-full h-[60vh] md:h-[100vh] flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <img
           src={assets.header1}
           alt="Dr. Ahmed Alkhatib"
@@ -34,7 +34,7 @@ const Blogs = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#121212]"></div>
 
-        <div className="relative flex flex-col items-center mt-15 z-10 text-center px-4 max-w-4xl">
+        <div className="relative flex flex-col items-center mt-20 z-10 text-center px-4 max-w-4xl">
           <AnimatedText delay={0.1}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl  mb-6 drop-shadow-lg">
               مقالات د. أحمد الخطيب

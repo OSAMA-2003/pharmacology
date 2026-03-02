@@ -4,6 +4,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { productsData } from "../data";
 import Carousel from "../common/Carousel";
 import AnimatedText from "../common/AnimatedContent"; // استيراد المكون
+import { Link } from "react-router-dom";
 
 const ProductsSection = () => {
     return (
@@ -38,17 +39,16 @@ const ProductsSection = () => {
 
                         {/* تحريك رابط المتجر */}
                         <AnimatedText delay={0.4}>
-                            <a 
-                                href="#" 
+                            <Link 
+                                to={'/products'} 
                                 className="text-[#cad5e4] font-bold text-lg hover:underline inline-block"
                             >
                                 مشاهدة كل منتجاتنا
-                            </a>
+                            </Link>
                         </AnimatedText>
                     </div>
                 </div>
 
-                {/* تحريك الكاروسيل بالكامل */}
                 <AnimatedText delay={0.6}>
                     <Carousel
                         data={productsData}
@@ -57,6 +57,7 @@ const ProductsSection = () => {
                         ButtonIcon={FaCartShopping}
                         buttonText="أضف إلى السلة"
                         gradientColor="from-[#4a3b2c]"
+                        to={'/products/:id'}
                     />
                 </AnimatedText>
 
