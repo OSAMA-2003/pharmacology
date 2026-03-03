@@ -52,7 +52,7 @@ const SocialSection = () => {
   ];
 
   return (
-    <section  className="py-16 px-6 md:px-20 font-sans">
+    <section  className="py-10 px-6 md:px-20 font-sans">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -61,7 +61,7 @@ const SocialSection = () => {
             تابعني على منصاتي
           </h2>
           <p className=" text-lg">
-            محتوي صحي يومي لملايين المتابعين.
+            محتوي صحي يومي لملايين المتابعين
           </p>
         </div>
 

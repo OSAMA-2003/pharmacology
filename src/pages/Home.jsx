@@ -31,7 +31,9 @@ const Home = () => {
       <BlogsSection/>
       <Testimonials/>
       <SocialSection/>
-      <CTA/>
+      <div className="md:mt-20">
+        <CTA/>
+      </div>
       {/* <Banner/> */}
  
     </div>

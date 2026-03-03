@@ -94,11 +94,11 @@ const Header = () => {
   return (
     <header className="relative w-full h-screen overflow-hidden bg-gray-900 text-white" dir="rtl">
       {/* Social Media Sidebar */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-6 border-r border-gray-400/50 pr-6 hidden md:flex">
-        <a href="#" className="text-xl hover:text-blue-400 transition-colors"><FaFacebookF /></a>
-        <a href="#" className="text-xl hover:text-pink-400 transition-colors"><FaInstagram /></a>
-        <a href="#" className="text-xl hover:text-red-600 transition-colors"><FaYoutube /></a>
-        <a href="#" className="text-xl hover:text-black transition-colors"><FaTiktok /></a>
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-6 border-r border-gray-400/50 pr-6 hidden md:flex"  >
+        <a href="https://www.facebook.com/DrAhmedElkhaateeb" target="_blank" className="text-xl hover:text-blue-400 transition-colors"><FaFacebookF /></a>
+        <a href="https://www.instagram.com/drahmedelkhateeb" target="_blank" className="text-xl hover:text-pink-400 transition-colors"><FaInstagram /></a>
+        <a href="https://www.youtube.com/@Dr_Ahmed_elkhateeb" target="_blank" className="text-xl hover:text-red-600 transition-colors"><FaYoutube /></a>
+        <a href="https://tiktok.com/@drahmedelkhateeb" target="_blank" className="text-xl hover:text-black transition-colors"><FaTiktok /></a>
       </div>
 
       {/* Carousel Container */}

@@ -1,8 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
+@font-face {
+  font-family: "Handicrafts";
+  src: url("./assets/fonts/TheYearofHandicrafts-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 * {
-  font-family: Cairo;
+  font-family: "Handicrafts", sans-serif;
 }
 
 
@@ -18,7 +24,8 @@
 }
 
 body {
-  @apply bg-gradient-to-b from-[#1D014B] via-[#3A1F66] to-[#E4DFE6]  ;
+    @apply bg-gradient-to-b from-[#1D014B] via-[#3A1F66] to-[#3A1F66]  ;
+  /* @apply bg-gradient-to-b from-[#1D014B] via-[#3A1F66] to-[#E4DFE6]  ; */
 }
 
 .gradient-secondary{
