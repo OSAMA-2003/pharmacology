@@ -7,6 +7,7 @@ import img3 from "../../assets/header-3.jpg";
 import img4 from "../../assets/header-4.jpg";
 import img5 from "../../assets/Dr ahmed V 1.png";
 import vid6 from "../../assets/Dr ahmed video v1.mp4";
+import img7 from "../../assets/header-7.jpg";
 import Button from "../common/Button";
 
 // تحديث هيكل البيانات لدعم الصور والفيديوهات، وفصل الموبايل عن الديسكتوب
@@ -14,7 +15,7 @@ const initialData = [
   {
     id: 1,
     // Desktop Media (e.g., Video)
-    desktop: { url: img2, type: "img" },
+    desktop: { url: img7, type: "img" },
     // Mobile Media (e.g., Image specifically for phone)
     mobile: { url: vid6, type: "video" },
     title: "ما بين الدواء والغذاء قصة.. سأحكيها لك.",
