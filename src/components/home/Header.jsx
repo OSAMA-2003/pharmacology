@@ -17,7 +17,7 @@ const initialData = [
     // Desktop Media (e.g., Video)
     desktop: { url: img7, type: "img" },
     // Mobile Media (e.g., Image specifically for phone)
-    mobile: { url: vid6, type: "video" },
+    mobile: { url: img5, type: "img" },
     title: "ما بين الدواء والغذاء قصة.. سأحكيها لك.",
     des: "استشارات متخصصة ودورات معتمدة في التغذية السريرية وعلم الأدوية من نخبة الخبراء في المجال.",
   },
@@ -134,7 +134,7 @@ const Header = () => {
           <div
             key={item.id}
             onClick={() => handleItemClick(index)}
-            className={`carousel-item shadow-2xl overflow-hidden transition-all duration-700 ease-in-out ${
+            className={` carousel-item shadow-2xl overflow-hidden transition-all duration-700 ease-in-out ${
               index !== 1 ? "cursor-pointer hover:brightness-110" : ""
             }`}
           >
@@ -148,7 +148,7 @@ const Header = () => {
             <div className="absolute inset-0 bg-gradient-to-l from-black/80 to-black/20 z-10 pointer-events-none"></div>
 
             {/* Content Area */}
-            <div className="carousel-content absolute top-1/2 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
+            <div className="carousel-content absolute top-2/3 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 md:mb-6 text-white drop-shadow-lg pointer-events-none">
                 {item.title}
               </h1>
