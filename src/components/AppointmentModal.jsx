@@ -170,7 +170,7 @@ const AppointmentModal = ({ isOpen, onClose, serviceInfo }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 font-sans" dir="rtl">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 " dir="rtl">
         {/* خلفية معتمة للمودال (بدون ثيم داكن، التصميم فاتح كما في الصورة) */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -186,12 +186,12 @@ const AppointmentModal = ({ isOpen, onClose, serviceInfo }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="relative w-full max-w-5xl max-h-[95vh] overflow-y-auto bg-[#f8f9fa] rounded-3xl shadow-2xl flex flex-col"
+          className="relative w-full max-w-5xl max-h-[85vh] overflow-y-auto bg-[#f8f9fa] rounded-3xl shadow-2xl flex flex-col"
         >
           {step < 5 && (
             <>
               {/* Header */}
-              <div className="bg-white p-5 md:p-6 rounded-t-3xl flex justify-between items-center shadow-sm z-10 sticky top-0">
+              <div className="z-100 bg-white p-5 md:p-6 rounded-t-3xl flex justify-between items-center shadow-sm  sticky top-0">
                 <div className="flex items-center gap-4">
                   <div className="bg-[#2d1b5a] text-white p-3 rounded-xl shadow-md">
                     <Video size={24} />
