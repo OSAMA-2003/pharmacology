@@ -88,8 +88,8 @@ const Navbar = () => {
             </div>
           ) : (
             <Button
-            className=" px-6 py-1.5 md:px-8 md:py-2  hidden lg:block"
-            to={'/login'}
+              className=" px-6 py-1.5 md:px-8 md:py-2  hidden lg:block"
+              to={'/login'}
             >
               دخول
             </Button>
@@ -135,8 +135,12 @@ const Navbar = () => {
               <button onClick={() => { setShowMenu(false); logout(); }} className="mt-2 bg-red-50 text-red-500 border border-red-100 px-8 py-3 rounded-xl font-medium w-full hover:bg-red-500 hover:text-white transition">تسجيل الخروج</button>
             </div>
           ) : (
-            <Button onClick={() => { setShowMenu(false); navigate("/login"); }} className=" transition shadow-md">دخول</Button>
-          )}
+            <Button
+              className=" px-6 py-1.5 md:px-8 md:py-2 "
+              to={'/login'}
+            >
+              دخول
+            </Button>)}
         </div>
       </div>
 
