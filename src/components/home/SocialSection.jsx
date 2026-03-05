@@ -52,7 +52,7 @@ const SocialSection = () => {
   ];
 
   return (
-    <section  className="py-10 px-6 md:px-20 font-sans">
+    <section  className="pb-10 px-6 md:px-20 font-sans">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
