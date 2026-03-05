@@ -66,7 +66,7 @@ const Consultations = () => {
             <div className="text-xs md:text-sm text-gray-400 mb-3 flex items-center justify-start gap-1">
               <span className="text-secondary font-medium cursor-pointer" onClick={() => navigate("/")}>الرئيسية</span>
               <span>/</span>
-              <span>المقالات</span>
+              <span>الاستشارات</span>
             </div>
           </AnimatedText>
 
