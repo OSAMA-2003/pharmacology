@@ -6,7 +6,7 @@ import img2 from "../../assets/header-2.jpg";
 import img3 from "../../assets/header-3.jpg";
 import img4 from "../../assets/header-4.jpg";
 import img5 from "../../assets/Dr ahmed V 1.png";
-import vid6 from "../../assets/Dr ahmed video v1.mp4";
+import vid6 from "../../assets/Dr Ahmed.mp4";
 import img7 from "../../assets/header-7.jpg";
 import Button from "../common/Button";
 
@@ -61,7 +61,7 @@ const Header = () => {
   useEffect(() => {
     const autoPlayInterval = setInterval(() => {
       setItems((prevItems) => [...prevItems.slice(1), prevItems[0]]);
-    }, 10000);
+    }, 75000);
 
     return () => clearInterval(autoPlayInterval);
   }, []);
