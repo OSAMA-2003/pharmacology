@@ -19,7 +19,7 @@ const CTA = () => {
               
               <div className="flex flex-col sm:flex-row gap-4 ">
                 <Button 
-                  to={'/consultation'}
+                  to={'/consultations'}
                 >
                   أحجز موعدك
                 </Button>

@@ -69,10 +69,9 @@ const Courses = () => {
         {/* === Header Section === */}
         <div className="mb-12 text-right text-white">
           <AnimatedText delay={0.1}>
-            <div className="text-xs md:text-sm text-gray-400 mb-4 flex items-center justify-start gap-2">
-              <span className="text-[#9b61db] font-medium cursor-pointer hover:text-white transition-colors" onClick={() => navigate("/")}>
-                الرئيسية
-              </span>
+             <div className="text-xs md:text-sm text-secondary mb-3 flex items-center justify-start gap-1">
+              <span className="text-secondary  font-medium cursor-pointer" onClick={() => navigate("/")}>الرئيسية</span>
+              
               <span>/</span>
               <span>الكورسات</span>
             </div>
