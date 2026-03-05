@@ -9,20 +9,20 @@
 // - Connect to AppContext with real API calls
 // ============================================================
 
-export const mockProfileImage = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face";
+export const mockProfileImage = "https://i.pinimg.com/736x/7a/58/79/7a587917c52780a7820c526426887c7a.jpg";
 
 export const mockUserData = {
   _id: "mock_user_001",
-  name: "أحمد محمد العلي",
-  email: "ahmed.ali@example.com",
-  phone: "+966 50 123 4567",
+  name: "عبسميع  ",
+  email: "abdo@example.com",
+  phone: "+20 1029317818",
   image: mockProfileImage,
   address: {
-    line1: "شارع الملك فهد، حي العليا",
-    line2: "الرياض، المملكة العربية السعودية",
+    line1: "شارع التحرير 123",
+    line2: "القاهرة، مصر",
   },
   gender: "Male",
-  dob: "1995-03-15",
+  dob: "2003-03-15",
   createdAt: "2024-01-15T10:30:00.000Z",
 };
 
