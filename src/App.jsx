@@ -14,7 +14,7 @@ import WhatsAppCompact from "./components/common/WhatsAppCompact";
 import Home from "./pages/Home";
 
 import Appointment from "./pages/appointment/Appointments";
-import Login from "./pages/auth/Login";
+import Login from "./pages/Login";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MyProfile from "./pages/user/MyProfile";
@@ -26,15 +26,18 @@ import Service from "./pages/Service";
 import ProductsPage from "./pages/product/ProductsPage";
 import ProductDetails from "./pages/product/ProductDetails";
 import Courses from "./pages/course/Courses";
-import Appointments from "./pages/appointment/Appointments";
 import Consultations from "./pages/Consultations";
 import Blogs from "./pages/blog/Blogs";
 import BlogDetails from "./pages/blog/BlogDetails";
 import CartPage from "./pages/product/CartPage";
+import CourseDetails from "./pages/course/CourseDetails";
+import MyCourses from "./pages/course/MyCourses";
 
 
 const App = () => {
   const location = useLocation();
+  // Hide Navbar and Footer on the login page
+  const hideLayout = location.pathname === '/login';
 
   return (
     <div className="  w-full min-h-screen flex flex-col">
@@ -52,7 +55,7 @@ const App = () => {
         toastClassName="font-sans min-h-[60px] text-lg"
         bodyClassName="text-right py-3"
       /> */}
-      <Navbar />
+      {!hideLayout && <Navbar />}
 
       <main className="flex-grow">
           <Routes location={location} key={location.pathname}>
@@ -64,6 +67,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/consultations" element={<Consultations />} />
             <Route path="/products" element={<ProductsPage/>} />
             <Route path="/products/:id" element={<ProductDetails/>} />
@@ -85,24 +89,32 @@ const App = () => {
             <Route
               path="/my-profile"
               element={
-                <ProtectedRoute>
+                // <ProtectedRoute>
                   <MyProfile />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
               path="/my-appointments"
               element={
-                <ProtectedRoute>
+                // <ProtectedRoute>
                   <MyAppointments />
-                </ProtectedRoute>
+                // </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-courses"
+              element={
+                // <ProtectedRoute>
+                  <MyCourses />
+                // </ProtectedRoute>
               }
             />
           </Routes>
       </main>
 
-      <Footer />
-      {/* <WhatsAppCompact /> */}
+      {!hideLayout && <Footer />}
+      {/* {!hideLayout && <WhatsAppCompact />} */}
     </div>
   );
 };

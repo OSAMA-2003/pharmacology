@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -26,6 +25,9 @@ import {
   Stethoscope,
   Target,
   Upload,
+  Globe,
+  MapPin,
+  Activity
 } from "lucide-react";
 
 const AppointmentForm = ({
@@ -91,7 +93,6 @@ const AppointmentForm = ({
   useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
-        // You might want to create a currency API endpoint
         const response = await api.get("/api/v1/currency/rate");
         if (response.data.success) {
           setExchangeRate(response.data.rate);
@@ -109,7 +110,6 @@ const AppointmentForm = ({
     setUsdAmount(parseFloat(usd.toFixed(2)));
   }, [serviceFees, exchangeRate]);
 
-  // Handle input change
   const handleInputChange = (section, field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -120,7 +120,6 @@ const AppointmentForm = ({
     }));
   };
 
-  // Handle file change
   const handleFileChange = (field, file) => {
     setFormData((prev) => ({
       ...prev,
@@ -131,13 +130,11 @@ const AppointmentForm = ({
     }));
   };
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Validate required medical fields
       const requiredFields = [
         "height",
         "weight",
@@ -157,10 +154,7 @@ const AppointmentForm = ({
         return;
       }
 
-      // Create FormData
       const formDataToSend = new FormData();
-
-      // Add appointment data
       const [date, time] = selectedDate.split(" - ");
       formDataToSend.append("serviceId", serviceId);
       formDataToSend.append("date", date);
@@ -169,30 +163,23 @@ const AppointmentForm = ({
       formDataToSend.append("message", formData.personalInfo.notes || "");
       formDataToSend.append("amount", serviceFees.toString());
 
-      // Add medical info
       Object.entries(formData.medicalInfo).forEach(([key, value]) => {
         formDataToSend.append(key, value || "");
       });
 
-      // Add personal info
       Object.entries(formData.personalInfo).forEach(([key, value]) => {
         if (key !== "notes") {
           formDataToSend.append(key, value || "");
         }
       });
 
-      // Add files
       if (formData.files.medicationsFile) {
-        formDataToSend.append(
-          "medicationsFile",
-          formData.files.medicationsFile
-        );
+        formDataToSend.append("medicationsFile", formData.files.medicationsFile);
       }
       if (formData.files.testsFile) {
         formDataToSend.append("testsFile", formData.files.testsFile);
       }
 
-      // Submit appointment
       const response = await appointmentApi.bookAppointment(formDataToSend);
 
       if (response.success) {
@@ -214,516 +201,339 @@ const AppointmentForm = ({
 
   if (!userData) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mx-auto mb-4"></div>
+      <div className="flex items-center justify-center p-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#9b61db] border-t-transparent"></div>
       </div>
     );
   }
 
+  // Common classes for inputs and textareas
+  const inputClass = "w-full border border-white/10 bg-[#0a051d]/50 rounded-xl px-12 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all";
+  const textareaClass = "w-full border border-white/10 bg-[#0a051d]/50 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all resize-none";
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-4xl mx-auto my-10"
+      className="w-full max-w-4xl mx-auto"
       dir="rtl"
     >
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-borderLight">
+      
+      <div className="bg-white/5 border border-white/10 rounded-[2rem] shadow-[0_0_40px_rgba(0,0,0,0.3)] overflow-hidden backdrop-blur-xl">
+        
         {/* Header */}
-        <div className="bg-gradient-to-r from-primary to-secondary p-6 text-white">
-          <h2 className="text-2xl font-bold text-center mb-2">تفاصيل الحجز</h2>
-          <p className="text-center opacity-90">
-            استكمال معلومات الحجز النهائية
+        <div className="bg-gradient-to-r from-[#8349c7] to-[#9b61db] p-8 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 relative z-10">إتمام معلومات الحجز</h2>
+          <p className="text-center opacity-90 relative z-10 text-sm md:text-base">
+            يرجى إكمال البيانات التالية بعناية لضمان أفضل جودة للخدمة
           </p>
         </div>
 
-        <div className="p-6">
-          {/* Service Details Card */}
-          <div className="bg-lightBg rounded-xl p-6 mb-8 border border-borderLight">
-            <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+        <div className="p-6 md:p-8 space-y-8">
+          
+          {/* Service Details Summary */}
+          <div className="bg-[#0a051d]/40 rounded-2xl p-6 border border-white/5">
+            <h3 className="text-lg font-bold text-[#9b61db] mb-4 flex items-center gap-2">
               <Calendar className="w-5 h-5" />
               تفاصيل الخدمة
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-textMain font-semibold mb-2">
-                  الخدمة المختارة
-                </p>
-                <p className="text-textSoft">
-                  {serviceInfo?.title || selectedCategory}
+                <p className="text-gray-400 text-sm mb-1">الخدمة المختارة</p>
+                <p className="text-white font-medium">{serviceInfo?.title || selectedCategory}</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">التاريخ والوقت</p>
+                <p className="text-white font-medium flex items-center gap-2" dir="ltr">
+                  {selectedDate} <Clock className="w-4 h-4 text-[#9b61db]" />
                 </p>
               </div>
-
               <div>
-                <p className="text-textMain font-semibold mb-2">
-                  التاريخ والوقت
-                </p>
-                <div className="flex items-center gap-2 text-textSoft">
-                  <Clock className="w-4 h-4" />
-                  {selectedDate}
-                </div>
+                <p className="text-gray-400 text-sm mb-1">السعر (EGP)</p>
+                <p className="text-[#9b61db] font-bold text-xl">{serviceFees} جنية</p>
               </div>
-
               <div>
-                <p className="text-textMain font-semibold mb-2">السعر (EGP)</p>
-                <p className="text-2xl font-bold text-primary">
-                  {serviceFees} جنيه
-                </p>
-              </div>
-
-              <div>
-                <p className="text-textMain font-semibold mb-2">السعر (USD)</p>
+                <p className="text-gray-400 text-sm mb-1">السعر (USD)</p>
                 <div className="flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-green-600" />
-                  <p className="text-2xl font-bold text-green-600">
-                    ${usdAmount}
-                  </p>
-                  <span className="text-xs text-textSoft">
-                    (سعر الصرف: 1 دولار = {(1 / exchangeRate).toFixed(2)} جنيه)
-                  </span>
+                  <DollarSign className="w-4 h-4 text-green-400" />
+                  <p className="text-green-400 font-bold text-xl">${usdAmount}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-10">
+            
             {/* Personal Information */}
-            <div className="bg-white rounded-xl p-6 border border-borderLight">
-              <h3 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
-                <User className="w-5 h-5" />
+            <div>
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
+                <div className="p-2 bg-[#2d1b5a] rounded-lg"><User className="w-5 h-5 text-[#9b61db]" /></div>
                 المعلومات الشخصية
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    الاسم الأول
-                  </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="relative">
+                  <label className="block text-gray-300 font-medium mb-2 text-sm">الاسم الأول <span className="text-red-500">*</span></label>
+                  <User className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                   <input
                     type="text"
                     value={formData.personalInfo.firstName}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "personalInfo",
-                        "firstName",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("personalInfo", "firstName", e.target.value)}
                     required
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="الاسم الأول"
+                    className={inputClass}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    اسم العائلة
-                  </label>
+                <div className="relative">
+                  <label className="block text-gray-300 font-medium mb-2 text-sm">اسم العائلة <span className="text-red-500">*</span></label>
+                  <User className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                   <input
                     type="text"
                     value={formData.personalInfo.lastName}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "personalInfo",
-                        "lastName",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("personalInfo", "lastName", e.target.value)}
                     required
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="اسم العائلة"
+                    className={inputClass}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    البريد الإلكتروني
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-textSoft" />
-                    <input
-                      type="email"
-                      value={formData.personalInfo.email}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "personalInfo",
-                          "email",
-                          e.target.value
-                        )
-                      }
-                      required
-                      className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                  </div>
+                <div className="relative">
+                  <label className="block text-gray-300 font-medium mb-2 text-sm">البريد الإلكتروني <span className="text-red-500">*</span></label>
+                  <Mail className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
+                  <input
+                    type="email"
+                    value={formData.personalInfo.email}
+                    onChange={(e) => handleInputChange("personalInfo", "email", e.target.value)}
+                    required
+                    placeholder="example@email.com"
+                    dir="ltr"
+                    className={inputClass}
+                  />
                 </div>
 
-                <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    رقم الهاتف
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-textSoft" />
-                    <input
-                      type="tel"
-                      value={formData.personalInfo.phone}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "personalInfo",
-                          "phone",
-                          e.target.value
-                        )
-                      }
-                      required
-                      className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
-                      placeholder="+966 50 123 4567"
-                    />
-                  </div>
+                <div className="relative">
+                  <label className="block text-gray-300 font-medium mb-2 text-sm">رقم الهاتف <span className="text-red-500">*</span></label>
+                  <Phone className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
+                  <input
+                    type="tel"
+                    value={formData.personalInfo.phone}
+                    onChange={(e) => handleInputChange("personalInfo", "phone", e.target.value)}
+                    required
+                    placeholder="+20 1XX XXX XXXX"
+                    dir="ltr"
+                    className={inputClass}
+                  />
                 </div>
 
-                <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    الدولة
-                  </label>
+                <div className="relative">
+                  <label className="block text-gray-300 font-medium mb-2 text-sm">الدولة <span className="text-red-500">*</span></label>
+                  <Globe className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                   <select
                     value={formData.personalInfo.country}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "personalInfo",
-                        "country",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("personalInfo", "country", e.target.value)}
                     required
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full border border-white/10 bg-[#0a051d] text-white rounded-xl px-12 py-3.5 focus:outline-none focus:border-[#9b61db] transition-all appearance-none"
                   >
-                    <option value="">اختر الدولة</option>
+                    <option value="" disabled>اختر الدولة</option>
+                    <option value="egypt">مصر</option>
                     <option value="saudi">المملكة العربية السعودية</option>
                     <option value="uae">الإمارات العربية المتحدة</option>
-                    <option value="egypt">مصر</option>
                     <option value="other">دولة أخرى</option>
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    المدينة
-                  </label>
+                <div className="relative">
+                  <label className="block text-gray-300 font-medium mb-2 text-sm">المدينة <span className="text-red-500">*</span></label>
+                  <MapPin className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                   <input
                     type="text"
                     value={formData.personalInfo.city}
-                    onChange={(e) =>
-                      handleInputChange("personalInfo", "city", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("personalInfo", "city", e.target.value)}
                     required
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="أدخل مدينتك"
+                    className={inputClass}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Medical Information Section */}
-            <div className="bg-white rounded-xl p-6 border border-borderLight">
-              <h3 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
-                <Stethoscope className="w-5 h-5" />
+            {/* Medical Information */}
+            <div>
+              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-3 border-b border-white/10 pb-4">
+                <div className="p-2 bg-[#2d1b5a] rounded-lg"><Stethoscope className="w-5 h-5 text-[#9b61db]" /></div>
                 المعلومات الطبية الأساسية
               </h3>
-              <p className="text-textSoft mb-6 text-sm">
-                برجاء ملء جميع الحقول المطلوبة بدقة للمساعدة في تقديم أفضل رعاية
-                صحية
-              </p>
+              <p className="text-gray-400 text-sm mb-6">يرجى تعبئة هذه البيانات بدقة لأنها الأساس الذي يبني عليه الدكتور تقييمه.</p>
 
               <div className="space-y-6">
-                {/* Height, Weight, Age Row */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-textMain font-medium mb-2 flex items-center gap-2">
-                      <Scale className="w-4 h-4" />
-                      الطول (سم)
-                      <span className="text-red-500">*</span>
-                    </label>
+                
+                {/* Physical Stats Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div className="relative">
+                    <label className="block text-gray-300 font-medium mb-2 text-sm">الطول (سم) <span className="text-red-500">*</span></label>
+                    <Scale className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                     <input
                       type="number"
                       value={formData.medicalInfo.height}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "medicalInfo",
-                          "height",
-                          e.target.value
-                        )
-                      }
-                      required
-                      min="50"
-                      max="250"
-                      step="0.1"
-                      placeholder="مثال: 175"
-                      className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      onChange={(e) => handleInputChange("medicalInfo", "height", e.target.value)}
+                      required min="50" max="250" step="0.1" placeholder="مثال: 175"
+                      className={inputClass}
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-textMain font-medium mb-2 flex items-center gap-2">
-                      <Weight className="w-4 h-4" />
-                      الوزن (كجم)
-                      <span className="text-red-500">*</span>
-                    </label>
+                  <div className="relative">
+                    <label className="block text-gray-300 font-medium mb-2 text-sm">الوزن (كجم) <span className="text-red-500">*</span></label>
+                    <Weight className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                     <input
                       type="number"
                       value={formData.medicalInfo.weight}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "medicalInfo",
-                          "weight",
-                          e.target.value
-                        )
-                      }
-                      required
-                      min="10"
-                      max="300"
-                      step="0.1"
-                      placeholder="مثال: 70"
-                      className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      onChange={(e) => handleInputChange("medicalInfo", "weight", e.target.value)}
+                      required min="10" max="300" step="0.1" placeholder="مثال: 70"
+                      className={inputClass}
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-textMain font-medium mb-2 flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      العمر (سنة)
-                      <span className="text-red-500">*</span>
-                    </label>
+                  <div className="relative">
+                    <label className="block text-gray-300 font-medium mb-2 text-sm">العمر <span className="text-red-500">*</span></label>
+                    <Calendar className="absolute right-4 top-[2.6rem] text-gray-500 w-5 h-5" />
                     <input
                       type="number"
                       value={formData.medicalInfo.age}
-                      onChange={(e) =>
-                        handleInputChange("medicalInfo", "age", e.target.value)
-                      }
-                      required
-                      min="1"
-                      max="120"
-                      placeholder="مثال: 30"
-                      className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      onChange={(e) => handleInputChange("medicalInfo", "age", e.target.value)}
+                      required min="1" max="120" placeholder="مثال: 30"
+                      className={inputClass}
                     />
                   </div>
                 </div>
 
-                {/* Chronic Diseases */}
+                {/* Textareas */}
                 <div>
-                  <label className="block text-textMain font-medium mb-2 flex items-center gap-2">
-                    <Heart className="w-4 h-4" />
-                    الأمراض المزمنة
-                    <span className="text-red-500">*</span>
+                  <label className="block text-gray-300 font-medium mb-2 text-sm flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-[#9b61db]" /> الأمراض المزمنة <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={formData.medicalInfo.chronicDiseases}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "medicalInfo",
-                        "chronicDiseases",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("medicalInfo", "chronicDiseases", e.target.value)}
                     required
-                    placeholder="اذكر جميع الأمراض المزمنة التي تعاني منها (مثل: السكري، الضغط، الربو، إلخ). إذا لم يكن لديك أمراض مزمنة، اكتب 'لا يوجد'"
-                    rows="3"
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="اذكر الأمراض المزمنة (مثل السكري، الضغط). إذا لم يوجد اكتب 'لا يوجد'"
+                    rows="2"
+                    className={textareaClass}
                   />
                 </div>
 
-                {/* File Uploads Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Medications File Upload */}
-                  <div className="bg-lightBg p-4 rounded-lg border border-borderLight">
-                    <label className="block text-textMain font-medium mb-3 flex items-center gap-2">
-                      <Pill className="w-4 h-4" />
-                      رفع قائمة الأدوية
-                      <span className="text-xs text-textSoft">(اختياري)</span>
-                    </label>
-                    <p className="text-textSoft text-sm mb-3">
-                      يمكنك رفع صورة أو ملف PDF لقائمة الأدوية الحالية التي
-                      تتناولها
-                    </p>
-
-                    <div className="border-2 border-dashed border-borderLight rounded-lg p-4 text-center">
-                      <Upload className="w-8 h-8 text-textSoft mx-auto mb-2" />
-                      <p className="text-textMain text-sm mb-2">
-                        رفع ملف الأدوية
-                      </p>
-
-                      <label className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-lg cursor-pointer hover:bg-primary/20 transition-colors text-sm">
-                        اختر ملف
-                        <input
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(
-                              "medicationsFile",
-                              e.target.files[0]
-                            )
-                          }
-                          className="hidden"
-                          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                        />
-                      </label>
-
-                      {formData.files.medicationsFile && (
-                        <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
-                          <p className="text-green-700 text-sm flex items-center gap-2">
-                            <svg
-                              className="w-4 h-4"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            {formData.files.medicationsFile.name}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Tests File Upload */}
-                  <div className="bg-lightBg p-4 rounded-lg border border-borderLight">
-                    <label className="block text-textMain font-medium mb-3 flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
-                      رفع التحاليل والفحوصات
-                      <span className="text-xs text-textSoft">(اختياري)</span>
-                    </label>
-                    <p className="text-textSoft text-sm mb-3">
-                      يمكنك رفع صور أو ملفات PDF للتحاليل والفحوصات الطبية
-                      الأخيرة
-                    </p>
-
-                    <div className="border-2 border-dashed border-borderLight rounded-lg p-4 text-center">
-                      <Upload className="w-8 h-8 text-textSoft mx-auto mb-2" />
-                      <p className="text-textMain text-sm mb-2">
-                        رفع ملف التحاليل
-                      </p>
-
-                      <label className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-lg cursor-pointer hover:bg-primary/20 transition-colors text-sm">
-                        اختر ملف
-                        <input
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange("testsFile", e.target.files[0])
-                          }
-                          className="hidden"
-                          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                        />
-                      </label>
-
-                      {formData.files.testsFile && (
-                        <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
-                          <p className="text-green-700 text-sm flex items-center gap-2">
-                            <svg
-                              className="w-4 h-4"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            {formData.files.testsFile.name}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Current Health Status */}
                 <div>
-                  <label className="block text-textMain font-medium mb-2">
-                    الحالة الصحية الحالية
-                    <span className="text-red-500 mr-1">*</span>
+                  <label className="block text-gray-300 font-medium mb-2 text-sm flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-[#9b61db]" /> الحالة الصحية الحالية <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={formData.medicalInfo.currentHealthStatus}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "medicalInfo",
-                        "currentHealthStatus",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("medicalInfo", "currentHealthStatus", e.target.value)}
                     required
-                    placeholder="صف حالتك الصحية الحالية بشكل مفصل، بما في ذلك الأعراض والمشاكل الصحية التي تعاني منها حالياً"
-                    rows="4"
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-
-                {/* Current Medications (Text) */}
-                <div>
-                  <label className="block text-textMain font-medium mb-2 flex items-center gap-2">
-                    <Pill className="w-4 h-4" />
-                    الأدوية الحالية (كتابة)
-                    <span className="text-xs text-textSoft">
-                      (اختياري - إذا لم ترفع ملف)
-                    </span>
-                  </label>
-                  <textarea
-                    value={formData.medicalInfo.currentMedications}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "medicalInfo",
-                        "currentMedications",
-                        e.target.value
-                      )
-                    }
-                    placeholder="اذكر جميع الأدوية التي تتناولها حالياً مع الجرعات والتكرار. مثال: باراسيتامول 500mg مرتين يومياً"
+                    placeholder="صف حالتك والأعراض التي تعاني منها بالتفصيل"
                     rows="3"
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className={textareaClass}
                   />
                 </div>
 
-                {/* Consultation Goal */}
                 <div>
-                  <label className="block text-textMain font-medium mb-2 flex items-center gap-2">
-                    <Target className="w-4 h-4" />
-                    الهدف من الاستشارة
-                    <span className="text-red-500 mr-1">*</span>
+                  <label className="block text-gray-300 font-medium mb-2 text-sm flex items-center gap-2">
+                    <Target className="w-4 h-4 text-[#9b61db]" /> الهدف من الاستشارة <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={formData.medicalInfo.consultationGoal}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "medicalInfo",
-                        "consultationGoal",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("medicalInfo", "consultationGoal", e.target.value)}
                     required
-                    placeholder="ما الذي تأمل في تحقيقه من خلال هذه الاستشارة؟ وما هي توقعاتك من الطبيب؟"
-                    rows="3"
-                    className="w-full border border-borderLight rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="ما الذي تأمل في تحقيقه من خلال هذه الاستشارة؟"
+                    rows="2"
+                    className={textareaClass}
                   />
                 </div>
+
+                <div>
+                  <label className="block text-gray-300 font-medium mb-2 text-sm flex items-center gap-2">
+                    <Pill className="w-4 h-4 text-[#9b61db]" /> الأدوية الحالية <span className="text-gray-500 text-xs">(اختياري - إن لم ترفع ملف)</span>
+                  </label>
+                  <textarea
+                    value={formData.medicalInfo.currentMedications}
+                    onChange={(e) => handleInputChange("medicalInfo", "currentMedications", e.target.value)}
+                    placeholder="اذكر جميع الأدوية والجرعات الحالية"
+                    rows="2"
+                    className={textareaClass}
+                  />
+                </div>
+
+                {/* File Uploads */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4">
+                  {/* Upload 1 */}
+                  <div className="bg-[#0a051d]/50 border border-white/5 rounded-2xl p-5">
+                    <label className="block text-white font-medium mb-2 flex items-center gap-2">
+                      <Pill className="w-4 h-4 text-[#9b61db]" /> رفع وصفات الأدوية <span className="text-gray-500 text-xs">(اختياري)</span>
+                    </label>
+                    <div className="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:bg-white/5 transition-colors group cursor-pointer relative">
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileChange("medicationsFile", e.target.files[0])}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                      />
+                      <Upload className="w-8 h-8 text-gray-500 group-hover:text-[#9b61db] transition-colors mx-auto mb-2" />
+                      <p className="text-gray-400 text-sm">اسحب الملف هنا أو اضغط للاختيار</p>
+                      
+                      {formData.files.medicationsFile && (
+                        <div className="mt-3 inline-block bg-[#9b61db]/20 text-[#9b61db] px-3 py-1 rounded-lg text-xs font-medium truncate max-w-full">
+                          {formData.files.medicationsFile.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Upload 2 */}
+                  <div className="bg-[#0a051d]/50 border border-white/5 rounded-2xl p-5">
+                    <label className="block text-white font-medium mb-2 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-[#9b61db]" /> رفع التحاليل/الفحوصات <span className="text-gray-500 text-xs">(اختياري)</span>
+                    </label>
+                    <div className="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:bg-white/5 transition-colors group cursor-pointer relative">
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileChange("testsFile", e.target.files[0])}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                      />
+                      <Upload className="w-8 h-8 text-gray-500 group-hover:text-[#9b61db] transition-colors mx-auto mb-2" />
+                      <p className="text-gray-400 text-sm">اسحب الملف هنا أو اضغط للاختيار</p>
+                      
+                      {formData.files.testsFile && (
+                        <div className="mt-3 inline-block bg-[#9b61db]/20 text-[#9b61db] px-3 py-1 rounded-lg text-xs font-medium truncate max-w-full">
+                          {formData.files.testsFile.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
-
             {/* Summary and Submit */}
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-6 border border-primary/20">
+            <div className="bg-gradient-to-r from-[#8349c7]/10 to-[#9b61db]/10 rounded-xl p-6 border border-white/10">
               <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div>
-                  <h3 className="text-xl font-bold text-primary mb-2">
+                  <h3 className="text-xl font-bold text-white mb-2">
                     ملخص الحجز
                   </h3>
                   <div className="flex items-center gap-4">
                     <div className="text-center">
-                      <p className="text-textSoft text-sm">السعر (EGP)</p>
-                      <p className="text-2xl font-bold text-primary">
+                      <p className="text-gray-400 text-sm">السعر (EGP)</p>
+                      <p className="text-2xl font-bold text-white">
                         {serviceFees} جنيه
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-textSoft text-sm">السعر (USD)</p>
-                      <p className="text-2xl font-bold text-green-600">
+                      <p className="text-gray-400 text-sm">السعر (USD)</p>
+                      <p className="text-2xl font-bold text-green-400">
                         ${usdAmount}
                       </p>
                     </div>
@@ -735,7 +545,7 @@ const AppointmentForm = ({
                   disabled={loading}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-secondary hover:to-primary transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-[#8349c7] to-[#9b61db] text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(155,97,219,0.4)] transition-all duration-300 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -748,8 +558,8 @@ const AppointmentForm = ({
                 </motion.button>
               </div>
 
-              <div className="mt-6 pt-6 border-t border-borderLight">
-                <p className="text-textSoft text-sm text-center">
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <p className="text-gray-400 text-sm text-center">
                   ✓ سيتم التواصل معك عبر البريد الإلكتروني أو الهاتف لتأكيد
                   الموعد
                 </p>

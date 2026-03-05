@@ -1,38 +1,33 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Lock, User, UserPlus, LogIn, CheckCircle2 } from "lucide-react"; // إضافة الأيقونات الاحترافية
 
 const Login = () => {
-  const { backendUrl, token, setToken } = useContext(AppContext);
+  const { token, login, register, loading: authLoading } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [state, setState] = useState("Sign Up");
+  const [state, setState] = useState("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  // حركات Framer Motion
   const pageVariants = {
-    initial: { opacity: 0, scale: 0.9 },
+    initial: { opacity: 0, scale: 0.95 },
     animate: {
       opacity: 1,
       scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
     exit: {
       opacity: 0,
-      scale: 0.9,
-      transition: {
-        duration: 0.3,
-      },
+      scale: 0.95,
+      transition: { duration: 0.3 },
     },
   };
 
@@ -41,10 +36,7 @@ const Login = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1,
-      },
+      transition: { duration: 0.6, staggerChildren: 0.1 },
     },
   };
 
@@ -59,113 +51,85 @@ const Login = () => {
       opacity: 1,
       height: "auto",
       marginBottom: "1rem",
-      transition: {
-        duration: 0.4,
-        ease: "easeInOut",
-      },
+      transition: { duration: 0.4, ease: "easeInOut" },
     },
     exit: {
       opacity: 0,
       height: 0,
       marginBottom: 0,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut",
-      },
+      transition: { duration: 0.3, ease: "easeInOut" },
     },
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    try {
-      let data;
-      if (state === "Sign Up") {
-        const response = await axios.post(`${backendUrl}/api/user/register`, {
-          name,
-          email,
-          password,
-        });
-        data = response.data;
-
-        if (data.success) {
-          localStorage.setItem("token", data.token);
-          setToken(data.token);
-          toast.success("🎉 تم إنشاء الحساب بنجاح");
-        } else {
-          toast.error(data.message);
-        }
-      } else {
-        const response = await axios.post(`${backendUrl}/api/user/login`, {
-          email,
-          password,
-        });
-        data = response.data;
-
-        if (data.success) {
-          localStorage.setItem("token", data.token);
-          setToken(data.token);
-          toast.success("✅ تم تسجيل الدخول بنجاح");
-        } else {
-          toast.error(data.message);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || error.message);
-    } finally {
-      setLoading(false);
+    // --- FRONTEND MOCK & BACKEND HOOK ---
+    // The `login` function is now handled by AppContext.
+    // The context will perform the mock logic.
+    // TODO (Backend Developer): The real API call is inside `AppContext.js`.
+    if (state === "Login") {
+      await login(email, password);
+    } else {
+      // Use the new register function from context
+      await register(name, email, password);
     }
   };
 
   useEffect(() => {
+    // This effect redirects the user if they are already logged in.
     if (token) {
       const from = location.state?.from?.pathname || "/";
       navigate(from);
     }
-  }, [token]);
+  }, [token, navigate, location]);
 
-  // Clear name field when switching to Login
   useEffect(() => {
     if (state === "Login") {
+      // Clear name field when switching to login form
       setName("");
     }
   }, [state]);
 
   return (
+    // استخدام الخلفية الداكنة الموحدة مع إضاءة خافتة
     <motion.div
       initial="initial"
       animate="animate"
       exit="exit"
       variants={pageVariants}
-      className="min-h-[80vh] flex items-center justify-center px-4"
+      className="min-h-screen flex items-center justify-center pt-32 pb-16 px-4  relative overflow-hidden"
       dir="rtl"
     >
+      {/* تأثيرات إضاءة في الخلفية */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#2d1b5a]/30 via-transparent to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-full h-1/2 bg-gradient-to-t from-[#13072e]/40 to-transparent pointer-events-none"></div>
+
       <motion.form
-        key={state} // Key change forces re-render with new state
+        key={state}
         onSubmit={onSubmitHandler}
         variants={formVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-5 p-8 w-full max-w-md border border-borderLight rounded-2xl text-textSoft text-sm shadow-2xl bg-white"
+        // تصميم زجاجي (Glassmorphism) للكارت
+        className="relative z-10 flex flex-col gap-5 p-8 w-full max-w-md border border-white/10 rounded-[2rem] text-gray-300 text-sm shadow-[0_0_40px_rgba(0,0,0,0.5)] bg-white/5 backdrop-blur-xl"
       >
         {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-2">
-          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary text-white text-2xl">
-            {state === "Sign Up" ? "👤" : "🔐"}
+        <motion.div variants={itemVariants} className="text-center mb-4">
+          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#8349c7] to-[#9b61db] text-white shadow-lg shadow-[#9b61db]/30 border border-white/20">
+            {state === "Sign Up" ? <UserPlus size={32} /> : <LogIn size={32} />}
           </div>
-          <p className="text-2xl font-bold text-primary">
+          <h2 className="text-3xl font-bold text-white mb-2">
             {state === "Sign Up" ? "إنشاء حساب جديد" : "تسجيل الدخول"}
-          </p>
-          <p className="mt-2">
+          </h2>
+          <p className="text-gray-400 text-base">
             {state === "Sign Up"
               ? "انضم إلينا وابدأ رحلة العناية بصحتك"
               : "مرحباً بعودتك! سجل دخولك الآن"}
           </p>
         </motion.div>
 
-        {/* Name Field (Sign Up only) with AnimatePresence */}
+        {/* Name Field (Sign Up only) */}
         <AnimatePresence mode="wait">
           {state === "Sign Up" && (
             <motion.div
@@ -176,66 +140,75 @@ const Login = () => {
               exit="exit"
               className="w-full overflow-hidden"
             >
-              <label className="block text-textMain font-medium mb-2">
+              <label className="block text-gray-300 font-medium mb-2 text-sm">
                 الاسم الكامل
               </label>
-              <input
-                className="border border-borderLight bg-lightBg rounded-xl w-full p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-                type="text"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-                required
-                placeholder="أدخل اسمك الكامل"
-              />
+              <div className="relative">
+                <User size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  className="border border-white/10 bg-[#0a051d]/50 rounded-xl w-full pr-12 pl-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all"
+                  type="text"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Email Field */}
         <motion.div variants={itemVariants} className="w-full">
-          <label className="block text-textMain font-medium mb-2">
+          <label className="block text-gray-300 font-medium mb-2 text-sm">
             البريد الإلكتروني
           </label>
-          <input
-            className="border border-borderLight bg-lightBg rounded-xl w-full p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            required
-            placeholder="example@email.com"
-          />
+          <div className="relative">
+            <Mail size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              className="border border-white/10 bg-[#0a051d]/50 rounded-xl w-full pr-12 pl-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              required
+              placeholder="example@email.com"
+              dir="ltr"
+            />
+          </div>
         </motion.div>
 
         {/* Password Field */}
         <motion.div variants={itemVariants} className="w-full">
-          <label className="block text-textMain font-medium mb-2">
+          <label className="block text-gray-300 font-medium mb-2 text-sm">
             كلمة المرور
           </label>
-          <input
-            className="border border-borderLight bg-lightBg rounded-xl w-full p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            required
-            placeholder="********"
-          />
+          <div className="relative">
+            <Lock size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              className="border border-white/10 bg-[#0a051d]/50 rounded-xl w-full pr-12 pl-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
+              placeholder="••••••••"
+              dir="ltr"
+            />
+          </div>
         </motion.div>
 
         {/* Submit Button */}
         <motion.button
           variants={itemVariants}
           type="submit"
-          disabled={loading}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-primary to-secondary text-white w-full py-3.5 rounded-xl text-base font-bold hover:from-secondary hover:to-primary transition-all duration-300 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+          disabled={authLoading}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="bg-gradient-to-r from-[#8349c7] to-[#9b61db] text-white w-full py-4 rounded-xl text-lg font-bold hover:shadow-[0_0_20px_rgba(155,97,219,0.4)] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed mt-4 border border-white/10"
         >
-          {loading ? (
+          {authLoading ? (
             <div className="flex items-center justify-center gap-2">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-              {state === "Sign Up"
-                ? "جاري إنشاء الحساب..."
-                : "جاري تسجيل الدخول..."}
+              {state === "Sign Up" ? "جاري الإنشاء..." : "جاري تسجيل الدخول..."}
             </div>
           ) : state === "Sign Up" ? (
             "إنشاء حساب"
@@ -244,52 +217,51 @@ const Login = () => {
           )}
         </motion.button>
 
-        {/* Toggle between Sign Up/Login */}
-        <motion.div variants={itemVariants} className="text-center mt-4">
+        {/* Toggle State */}
+        <motion.div variants={itemVariants} className="text-center mt-2">
           {state === "Sign Up" ? (
-            <p>
+            <p className="text-gray-400">
               لديك حساب بالفعل؟{" "}
               <span
                 onClick={() => setState("Login")}
-                className="text-primary font-bold cursor-pointer hover:underline"
+                className="text-[#9b61db] font-bold cursor-pointer hover:text-white transition-colors"
               >
-                تسجيل الدخول هنا
+                سجل الدخول هنا
               </span>
             </p>
           ) : (
-            <p>
+            <p className="text-gray-400">
               ليس لديك حساب؟{" "}
               <span
                 onClick={() => setState("Sign Up")}
-                className="text-primary font-bold cursor-pointer hover:underline"
+                className="text-[#9b61db] font-bold cursor-pointer hover:text-white transition-colors"
               >
-                انشاء حساب جديد
+                انشئ حساباً جديداً
               </span>
             </p>
           )}
         </motion.div>
 
-        {/* Features */}
+        {/* Features Box */}
         <motion.div
           variants={itemVariants}
-          className="mt-6 pt-6 border-t border-borderLight"
+          className="mt-4 pt-6 border-t border-white/10"
         >
-          <p className="text-textMain font-bold mb-3">مزايا التسجيل:</p>
-          <ul className="text-textSoft text-sm space-y-2">
-            <li className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              حجز المواعيد بسهولة
-            </li>
-            <li className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              متابعة جميع المواعيد
-            </li>
-            <li className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              استلام التنبيهات والتحديثات
-            </li>
+          <p className="text-gray-300 font-bold mb-4 text-center">مزايا حسابك:</p>
+          <ul className="text-gray-400 text-sm space-y-3 px-2">
+            {[
+              "حجز وإدارة المواعيد بكل سهولة",
+              "متابعة دوراتك التدريبية (الكورسات)",
+              "تتبع طلبات المنتجات وإضافتها للمفضلة"
+            ].map((feature, index) => (
+              <li key={index} className="flex items-center gap-3">
+                <CheckCircle2 size={18} className="text-[#9b61db]" />
+                <span>{feature}</span>
+              </li>
+            ))}
           </ul>
         </motion.div>
+
       </motion.form>
     </motion.div>
   );

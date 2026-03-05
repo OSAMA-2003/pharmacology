@@ -3,7 +3,7 @@ import { FaCalendarDays } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { assets } from "../../assets/assets";
 // استيراد مكون الأنيميشن (تأكد من مطابقة المسار واسم المكون في مشروعك)
-import AnimatedText from "../common/AnimatedContent"; 
+import AnimatedText from "../common/AnimatedContent";
 import Button from "../common/Button";
 
 const WhyChooseUs = () => {
@@ -31,7 +31,7 @@ const WhyChooseUs = () => {
   return (
     <section className="py-16 px-4 md:px-10" dir="rtl">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* === Section Header === */}
         <div className="text-center md:text-right mb-12">
           <AnimatedText delay={0.1}>
@@ -39,7 +39,7 @@ const WhyChooseUs = () => {
               ليه تختار دكتور أحمد الخطيب:
             </h2>
           </AnimatedText>
-          
+
           <AnimatedText delay={0.2}>
             <p className="text-lg  font-medium max-w-2xl">
               نحن نقدم تجارب تعليمية واستشارية استثنائية تجمع بين الخبرة العملية والمعرفة الأكاديمية
@@ -52,7 +52,7 @@ const WhyChooseUs = () => {
           {features.map((feature, index) => (
             <AnimatedText key={feature.id} delay={0.3 + index * 0.1}>
               <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col justify-between h-full transition-transform duration-300 hover:-translate-y-1 hover:shadow-md border border-gray-100">
-                
+
                 {/* Top part: Text (Right) and Image (Left) */}
                 <div className="flex justify-between items-start gap-4 mb-8">
                   {/* Text Content */}
@@ -64,7 +64,7 @@ const WhyChooseUs = () => {
                       {feature.desc}
                     </p>
                   </div>
-                  
+
                   {/* Illustration */}
                   <div className="w-1/3 flex justify-center items-center">
                     <img
@@ -76,19 +76,15 @@ const WhyChooseUs = () => {
                 </div>
 
                 {/* Bottom part: Button */}
-                <Link to="/appointment">
-  <Button className="w-full relative overflow-hidden 
-    
-    ">
-    
-    أحجز موعدك
-  </Button>
-</Link>
+                  <Button to={'/consultations'} className="w-full ">
+
+                    أحجز موعدك
+                  </Button>
               </div>
             </AnimatedText>
           ))}
         </div>
-        
+
       </div>
     </section>
   );

@@ -1,5 +1,7 @@
 // Consultations Data
 
+import { time } from "framer-motion";
+
 export const consultationsData = [
   {
     id: 1,
@@ -54,50 +56,29 @@ export const consultationsData = [
 
 export const coursesData = [
   {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600&auto=format&fit=crop",
-    price: "450 جنيه",
-    title: "كورس التغذية السريرية ",
-    desc: "برنامج تدريبي شامل يغطي أحدث بروتوكولات التغذية العلاجية للأمراض المزمنة، مصمم خصيصاً للأطباء وأخصائيي التغذية.",
-    meta1: "50 س",
-    meta2: "15 محاضرة",
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop",
-    price: "300 جنيه",
-    title: "أساسيات علم الأدوية",
-    desc: "دورة مكثفة لفهم التداخلات الدوائية مع الغذاء، وتأثيراتها على الجسم، وكيفية وصف المكملات الغذائية بأمان.",
-    meta1: "25 س",
-    meta2: "8 محاضرات",
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop",
-    price: "550 جنيه",
-    title: "دبلومة التغذية الرياضية",
-    desc: "تعلم كيفية تصميم برامج غذائية للرياضيين المحترفين، حساب الماكروز، واستراتيجيات التنشيف والتضخيم.",
-    meta1: "60 س",
-    meta2: "20 محاضرة",
-  },
-  {
-    id: 4,
-    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=600&auto=format&fit=crop",
-    price: "350 جنيه",
-    title: "إدارة السمنة والنحافة",
-    desc: "كورس عملي يركز على أحدث الطرق العلمية للتعامل مع حالات السمنة المفرطة والنحافة وتعديل السلوك الغذائي.",
-    meta1: "30 س",
-    meta2: "10 محاضرات",
-  },
-  {
-    id: 5,
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=600&auto=format&fit=crop",
-    price: "400 جنيه",
-    title: "تغذية الحوامل والأطفال",
-    desc: "دليل شامل للعناية بصحة الأم والجنين خلال فترات الحمل المختلفة، بالإضافة لأساسيات تغذية الرضع والأطفال.",
-    meta1: "40 س",
-    meta2: "12 محاضرة",
-  },
+    id: "c1",
+    _id: "c1",
+    image: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=600&auto=format&fit=crop", 
+    title: "كورسات التغذية الصحية مع د. أحمد الخطيب",
+    desc: "تعلم أسس التغذية السليمة، تنظيم الوجبات، وبناء نمط حياة صحي بخطوات سهلة وتطبيق عملي من المنزل.",
+    price: "450",
+    meta1: "40 ساعة",
+    meta2: "اون لاين",
+    tags: ["شهادة معتمدة", "شهادة معتمدة", "شهادة معتمدة"],
+    note: "بعد الاشتراك سيتم إرسال رابط الكورس على بريدك الإلكتروني.",
+    timeline: [
+      "التسجيل في الكورس",
+      "استلام الدروس عبر الإيميل",
+      "تطبيق البرنامج الغذائي",
+      "الحصول على الشهادة"
+    ],
+    features: [
+      { text: "برنامج صحي عملي", iconName: "heart" },
+      { text: "مرونة في التعلم", iconName: "calendar" },
+      { text: "متابعة عبر الإيميل", iconName: "mail" },
+      { text: "شهادة معتمدة", iconName: "award" }
+    ]
+  }
 ];
 
 

@@ -1,22 +1,23 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+
 const MyProfile = () => {
-  const { userData, loadUserProfileData, updateUserProfile, token } =
-    useContext(AppContext);
-  const [isEdit, setIsEdit] = useState(false);
-  const [formData, setFormData] = useState({
+  const { userData, updateUserProfile, loading: authLoading } = useContext(AppContext);
+
+  const [state, setState] = useState({
+    isEdit: false,
+    formData: {
     name: "",
     phone: "",
     address: { line1: "", line2: "" },
     gender: "Male",
     dob: "",
     image: null,
+    },
   });
-  const [loading, setLoading] = useState(false);
 
   const pageVariants = {
     initial: { opacity: 0 },
@@ -36,44 +37,81 @@ const MyProfile = () => {
   };
 
   useEffect(() => {
-    if (token && !userData) {
-      loadUserProfileData();
-    }
-  }, [token]);
-
-  useEffect(() => {
     if (userData) {
-      setFormData({
+      setState((prev) => ({
+        ...prev,
+        formData: {
         name: userData.name || "",
         phone: userData.phone || "",
         address: userData.address || { line1: "", line2: "" },
         gender: userData.gender || "Male",
         dob: userData.dob || "",
         image: null,
-      });
+        },
+      }));
     }
   }, [userData]);
 
   const handleSave = async () => {
-    setLoading(true);
     const data = new FormData();
-    data.append("name", formData.name);
-    data.append("phone", formData.phone);
-    data.append("address", JSON.stringify(formData.address));
-    data.append("gender", formData.gender);
-    data.append("dob", formData.dob);
-    if (formData.image) data.append("image", formData.image);
+    data.append("name", state.formData.name);
+    data.append("phone", state.formData.phone);
+    data.append("address", JSON.stringify(state.formData.address));
+    data.append("gender", state.formData.gender);
+    data.append("dob", state.formData.dob);
+    if (state.formData.image) data.append("image", state.formData.image);
 
     const result = await updateUserProfile(data);
 
     if (result) {
       toast.success("✅ تم تحديث الملف الشخصي بنجاح");
-      setIsEdit(false);
+      setState((prev) => ({ ...prev, isEdit: false }));
+    } else {
+      toast.error("❌ فشل تحديث الملف الشخصي");
     }
-    setLoading(false);
   };
 
-  if (!userData) {
+  const handleCancel = () => {
+    if (userData) {
+      setState((prev) => ({
+        ...prev,
+        isEdit: false,
+        formData: {
+          name: userData.name || "",
+          phone: userData.phone || "",
+          address: userData.address || { line1: "", line2: "" },
+          gender: userData.gender || "Male",
+          dob: userData.dob || "",
+          image: null,
+        },
+      }));
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setState((prev) => ({
+      ...prev,
+      formData: {
+        ...prev.formData,
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleAddressChange = (field, value) => {
+    setState((prev) => ({
+      ...prev,
+      formData: {
+        ...prev.formData,
+        address: {
+          ...prev.formData.address,
+          [field]: value,
+        },
+      },
+    }));
+  };
+
+  if (!userData && authLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <motion.div
@@ -84,6 +122,19 @@ const MyProfile = () => {
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mx-auto mb-4"></div>
           <p className="text-textSoft text-lg">جاري تحميل البيانات...</p>
         </motion.div>
+      </div>
+    );
+  }
+
+  if (!userData && !authLoading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center text-center">
+        <div>
+          <h2 className="text-2xl font-bold text-primary mb-4">
+            خطأ في تحميل البيانات
+          </h2>
+          <p className="text-textSoft">يرجى تسجيل الدخول مرة أخرى.</p>
+        </div>
       </div>
     );
   }
@@ -111,13 +162,13 @@ const MyProfile = () => {
                 transition={{ type: "spring", stiffness: 200 }}
                 className="w-48 h-48 rounded-full object-cover border-4 border-primary/20 shadow-xl"
                 src={
-                  formData.image
-                    ? URL.createObjectURL(formData.image)
-                    : userData.image || assets.profile_pic
+                  state.formData.image
+                    ? URL.createObjectURL(state.formData.image)
+                    : userData.image
                 }
                 alt="Profile"
               />
-              {isEdit && (
+              {state.isEdit && (
                 <motion.label
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -146,27 +197,24 @@ const MyProfile = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        image: e.target.files[0],
-                      }))
-                    }
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        handleInputChange("image", e.target.files[0]);
+                      }
+                    }}
                     className="hidden"
                   />
                 </motion.label>
               )}
             </div>
 
-            {isEdit ? (
+            {state.isEdit ? (
               <motion.input
                 whileFocus={{ scale: 1.02 }}
-                className="bg-lightBg text-2xl font-bold text-center max-w-60 px-4 py-2 rounded-xl border border-borderLight focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
+                className="text-2xl font-bold text-center max-w-60 px-4 py-2 rounded-xl border border-borderLight focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
                 type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
+                value={state.formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
               />
             ) : (
               <motion.h2
@@ -174,7 +222,7 @@ const MyProfile = () => {
                 animate={{ y: 0, opacity: 1 }}
                 className="font-bold text-2xl text-primary text-center"
               >
-                {formData.name}
+                {state.formData.name}
               </motion.h2>
             )}
 
@@ -185,7 +233,7 @@ const MyProfile = () => {
                 <span className="text-textSoft font-medium">
                   البريد الإلكتروني:
                 </span>
-                <span className="text-primary font-semibold">
+                <span className="text-primary font-semibold text-sm">
                   {userData.email}
                 </span>
               </div>
@@ -197,35 +245,55 @@ const MyProfile = () => {
               </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => (isEdit ? handleSave() : setIsEdit(true))}
-              disabled={loading}
-              className={`mt-6 w-full py-3 rounded-xl font-bold text-lg transition-all duration-300 ${
-                isEdit
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-emerald-600 hover:to-green-500"
-                  : "bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary"
-              } text-white shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed`}
-            >
-              {loading ? (
+            <div className="flex gap-3 w-full mt-6">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() =>
+                  state.isEdit
+                    ? handleSave()
+                    : setState((prev) => ({ ...prev, isEdit: true }))
+                }
+                disabled={authLoading}
+                className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all duration-300 ${
+                  state.isEdit
+                    ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-emerald-600 hover:to-green-500"
+                    : "bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary"
+                } text-white shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer`}
+              >
+                {authLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                   جاري الحفظ...
                 </div>
-              ) : isEdit ? (
+                ) : state.isEdit ? (
                 "حفظ التغييرات"
               ) : (
                 "تعديل الملف الشخصي"
               )}
-            </motion.button>
+              </motion.button>
+
+              {state.isEdit && (
+                <motion.button
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleCancel}
+                  disabled={authLoading}
+                  className="py-3 px-5 rounded-xl font-bold text-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all duration-300 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  إلغاء
+                </motion.button>
+              )}
+            </div>
           </motion.div>
         </div>
       </motion.div>
 
       {/* Right Side - Detailed Information */}
       <motion.div variants={itemVariants} className="md:w-2/3">
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-borderLight">
+        <div className="rounded-2xl shadow-lg p-8 border border-borderLight">
           <motion.h3
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -238,7 +306,7 @@ const MyProfile = () => {
             {/* Contact Information */}
             <motion.div
               variants={itemVariants}
-              className="bg-lightBg rounded-xl p-6"
+              className="rounded-xl p-6 text-black"
             >
               <h4 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
                 <svg
@@ -261,25 +329,30 @@ const MyProfile = () => {
                   <label className="block text-textSoft font-medium mb-2">
                     رقم الهاتف
                   </label>
-                  {isEdit ? (
+                  {state.isEdit ? (
                     <motion.input
                       whileFocus={{ scale: 1.02 }}
-                      className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
+                      className="w-full border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
                       type="tel"
-                      value={formData.phone}
+                      value={state.formData.phone}
                       onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
+                        handleInputChange("phone", e.target.value)
                       }
                       placeholder="أدخل رقم هاتفك"
                     />
                   ) : (
-                    <p className="text-textMain font-semibold text-lg bg-white p-3 rounded-xl border border-borderLight">
-                      {formData.phone || "غير محدد"}
+                    <p className="text-textMain font-semibold text-lg p-3 rounded-xl border border-borderLight">
+                      {state.formData.phone || "غير محدد"}
                     </p>
                   )}
+                </div>
+                <div>
+                  <label className="block text-textSoft font-medium mb-2">
+                    البريد الإلكتروني
+                  </label>
+                  <p className="text-textMain  font-semibold text-lg  p-3 rounded-xl border border-borderLight">
+                    {userData.email}
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -287,7 +360,7 @@ const MyProfile = () => {
             {/* Address Information */}
             <motion.div
               variants={itemVariants}
-              className="bg-lightBg rounded-xl p-6"
+              className=" rounded-xl p-6"
             >
               <h4 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
                 <svg
@@ -312,44 +385,58 @@ const MyProfile = () => {
                 العنوان
               </h4>
               <div className="space-y-4">
-                {isEdit ? (
+                {state.isEdit ? (
                   <>
-                    <motion.input
-                      whileFocus={{ scale: 1.02 }}
-                      className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
-                      type="text"
-                      value={formData.address.line1}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          address: { ...prev.address, line1: e.target.value },
-                        }))
-                      }
-                      placeholder="العنوان الأساسي"
-                    />
-                    <motion.input
-                      whileFocus={{ scale: 1.02 }}
-                      className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
-                      type="text"
-                      value={formData.address.line2}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          address: { ...prev.address, line2: e.target.value },
-                        }))
-                      }
-                      placeholder="العنوان التفصيلي (اختياري)"
-                    />
+                    <div>
+                      <label className="block text-textSoft font-medium mb-2">
+                        العنوان الأساسي
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
+                        type="text"
+                        value={state.formData.address.line1}
+                        onChange={(e) =>
+                          handleAddressChange("line1", e.target.value)
+                        }
+                        placeholder="العنوان الأساسي"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-textSoft font-medium mb-2">
+                        العنوان التفصيلي (اختياري)
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
+                        type="text"
+                        value={state.formData.address.line2}
+                        onChange={(e) =>
+                          handleAddressChange("line2", e.target.value)
+                        }
+                        placeholder="العنوان التفصيلي (اختياري)"
+                      />
+                    </div>
                   </>
                 ) : (
                   <div className="space-y-2">
-                    <p className="text-textMain font-semibold text-lg bg-white p-3 rounded-xl border border-borderLight">
-                      {formData.address.line1 || "غير محدد"}
-                    </p>
-                    {formData.address.line2 && (
-                      <p className="text-textSoft bg-white p-3 rounded-xl border border-borderLight">
-                        {formData.address.line2}
+                    <div>
+                      <label className="block text-textSoft font-medium mb-1">
+                        العنوان الأساسي
+                      </label>
+                      <p className="text-textMain font-semibold text-lg bg-white p-3 rounded-xl border border-borderLight">
+                        {state.formData.address.line1 || "غير محدد"}
                       </p>
+                    </div>
+                    {state.formData.address.line2 && (
+                      <div>
+                        <label className="block text-textSoft font-medium mb-1">
+                          العنوان التفصيلي
+                        </label>
+                        <p className="text-textSoft bg-white p-3 rounded-xl border border-borderLight">
+                          {state.formData.address.line2}
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
@@ -359,7 +446,7 @@ const MyProfile = () => {
             {/* Personal Information */}
             <motion.div
               variants={itemVariants}
-              className="bg-lightBg rounded-xl p-6"
+              className=" rounded-xl p-6"
             >
               <h4 className="text-xl font-bold text-secondary mb-4 flex items-center gap-2">
                 <svg
@@ -382,16 +469,13 @@ const MyProfile = () => {
                   <label className="block text-textSoft font-medium mb-2">
                     الجنس
                   </label>
-                  {isEdit ? (
+                  {state.isEdit ? (
                     <motion.select
                       whileFocus={{ scale: 1.02 }}
                       className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
-                      value={formData.gender}
+                      value={state.formData.gender}
                       onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          gender: e.target.value,
-                        }))
+                        handleInputChange("gender", e.target.value)
                       }
                     >
                       <option value="Male">ذكر</option>
@@ -399,7 +483,7 @@ const MyProfile = () => {
                     </motion.select>
                   ) : (
                     <p className="text-textMain font-semibold text-lg bg-white p-3 rounded-xl border border-borderLight">
-                      {formData.gender === "Male" ? "ذكر" : "أنثى"}
+                      {state.formData.gender === "Male" ? "ذكر" : "أنثى"}
                     </p>
                   )}
                 </div>
@@ -407,22 +491,23 @@ const MyProfile = () => {
                   <label className="block text-textSoft font-medium mb-2">
                     تاريخ الميلاد
                   </label>
-                  {isEdit ? (
+                  {state.isEdit ? (
                     <motion.input
                       whileFocus={{ scale: 1.02 }}
                       className="w-full bg-white border border-borderLight rounded-xl p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-textMain"
                       type="date"
-                      value={formData.dob}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          dob: e.target.value,
-                        }))
-                      }
+                      value={state.formData.dob}
+                      onChange={(e) => handleInputChange("dob", e.target.value)}
                     />
                   ) : (
                     <p className="text-textMain font-semibold text-lg bg-white p-3 rounded-xl border border-borderLight">
-                      {formData.dob || "غير محدد"}
+                      {state.formData.dob
+                        ? new Date(state.formData.dob).toLocaleDateString("ar-SA", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "غير محدد"}
                     </p>
                   )}
                 </div>
@@ -430,6 +515,27 @@ const MyProfile = () => {
             </motion.div>
           </div>
         </div>
+
+        {/* Mock Data Notice for Developers */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-5"
+          dir="ltr"
+        >
+          <div className="flex items-start gap-3">
+            <svg className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <h5 className="font-bold text-amber-800 text-sm">Developer Notice — Mock Data in Use</h5>
+              <p className="text-amber-700 text-xs mt-1">
+                This component is connected to <code className="bg-amber-100 px-1 rounded">AppContext</code>. 
+                The actual API logic (currently mocked) is located in <code className="bg-amber-100 px-1 rounded">src/context/AppContext.jsx</code>.
+                Please update the functions <code className="bg-amber-100 px-1 rounded">updateUserProfile</code> and <code className="bg-amber-100 px-1 rounded">loadUserProfileData</code> there.
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );

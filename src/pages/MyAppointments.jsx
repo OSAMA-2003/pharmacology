@@ -1,18 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  mockGetUserAppointments,
+  mockCancelAppointment,
+  mockInitiatePayment,
+  mockVerifyPayment,
+} from "./user/testUser";
 
 const MyAppointments = () => {
-  const { token, backendUrl } = useContext(AppContext);
+  const { token } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
-  const [paymentWindow, setPaymentWindow] = useState(null);
 
   const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -59,14 +63,11 @@ const MyAppointments = () => {
     if (!token) return;
     setLoading(true);
     try {
-      const { data } = await axios.get(`${backendUrl}/api/appointments/user`, {
-        headers: { token },
-      });
-      if (data.success) {
-        setAppointments(data.appointments);
-        console.log("Appointments loaded:", data.appointments);
+      const response = await mockGetUserAppointments();
+      if (response.success) {
+        setAppointments(response.appointments);
       } else {
-        toast.error(data.message || "حدث خطأ أثناء جلب المواعيد");
+        toast.error("حدث خطأ أثناء جلب المواعيد");
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
@@ -80,78 +81,52 @@ const MyAppointments = () => {
     setPaymentLoading(appointmentId);
 
     try {
-      const { data } = await axios.post(
-        `${backendUrl}/api/payment/initiate`,
-        { appointmentId },
-        { headers: { token } }
-      );
+      const response = await mockInitiatePayment(appointmentId);
 
-      if (!data.success) {
+      if (!response.success) {
         toast.error(data.message || "فشل بدء عملية الدفع");
         setPaymentLoading(null);
         return;
       }
 
-      const newWindow = window.open(
-        data.paymentUrl,
-        "PaymobPayment",
-        "width=600,height=700,scrollbars=yes"
-      );
-
-      if (!newWindow) {
-        toast.error("يرجى السماح بالنوافذ المنبثقة للمتابعة");
-        setPaymentLoading(null);
-        return;
+      // MOCK: Simulate payment process
+      toast.info("جاري معالجة الدفع (محاكاة)...");
+      const verifyResponse = await mockVerifyPayment(appointmentId);
+      if (verifyResponse.paid) {
+        toast.success("تم الدفع بنجاح! ✅");
+        // Update local state
+        setAppointments((prev) =>
+          prev.map((appt) =>
+            appt._id === appointmentId ? { ...appt, paid: true } : appt
+          )
+        );
       }
-
-      setPaymentWindow(newWindow);
-      toast.info("جاري فتح نافذة الدفع...");
-
-      const checkInterval = setInterval(async () => {
-        if (newWindow.closed) {
-          clearInterval(checkInterval);
-
-          try {
-            const { data: verifyData } = await axios.get(
-              `${backendUrl}/api/payment/verify/${appointmentId}`,
-              { headers: { token } }
-            );
-
-            if (verifyData.paid) {
-              toast.success("تم الدفع بنجاح! ✅");
-              setTimeout(() => loadAppointments(), 1000);
-            } else {
-              toast.info("تم إغلاق نافذة الدفع");
-            }
-          } catch (error) {
-            console.error("Verification error:", error);
-          }
-
-          setPaymentLoading(null);
-          setPaymentWindow(null);
-        }
-      }, 1000);
     } catch (error) {
       console.error("Payment Error:", error);
       toast.error("حدث خطأ أثناء الدفع");
+    } finally {
       setPaymentLoading(null);
     }
   };
 
   const cancelAppointment = async () => {
+    if (!selectedAppointmentId) return;
     try {
-      const { data } = await axios.post(
-        `${backendUrl}/api/appointments/cancel`,
-        { appointmentId: selectedAppointmentId },
-        { headers: { token } }
-      );
+      const response = await mockCancelAppointment(selectedAppointmentId);
 
-      if (data.success) {
+      if (response.success) {
         toast.success("تم إلغاء الموعد بنجاح");
         setShowCancelModal(false);
-        setTimeout(() => loadAppointments(), 500);
+        // Update local state
+        setAppointments((prev) =>
+          prev.map((appt) =>
+            appt._id === selectedAppointmentId
+              ? { ...appt, status: "cancelled" }
+              : appt
+          )
+        );
       } else {
-        toast.error(data.message);
+        toast.error(response.message);
       }
     } catch (error) {
       console.error("Cancel error:", error);
@@ -213,14 +188,6 @@ const MyAppointments = () => {
   useEffect(() => {
     loadAppointments();
   }, [token]);
-
-  useEffect(() => {
-    return () => {
-      if (paymentWindow && !paymentWindow.closed) {
-        paymentWindow.close();
-      }
-    };
-  }, [paymentWindow]);
 
   if (!token) {
     return (

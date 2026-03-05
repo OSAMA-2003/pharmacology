@@ -10,7 +10,9 @@ const Carousel = ({
   ButtonIcon,
   buttonText,
   gradientColor = "from-[#3a4417]",
-  to
+  to,
+  onClick,
+
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const total = data?.length || 0;
@@ -107,8 +109,9 @@ const Carousel = ({
           buttonText={buttonText}
           gradientColor={gradientColor}
           className={getCardStyle(index)}
-          onClick={() => handleCardClick(index)}
-          to={to ? to.replace(":id", item.id || item._id) : "#"}
+          onClick={onClick ? () => onClick(item) : undefined}
+          to={!onClick && to ? to.replace(":id", item.id || item._id) : undefined}
+         
         />
         
       ))}

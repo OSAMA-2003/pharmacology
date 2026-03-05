@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from "react";
-
 import { authApi } from "../../api/auth.api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppContext } from "../../context/AppContext";
+import { Mail, Lock, User, UserPlus, LogIn, CheckCircle2 } from "lucide-react"; // تم استيراد أيقونات lucide-react
 
 const Login = () => {
   const { setToken } = useContext(AppContext);
@@ -22,21 +22,16 @@ const Login = () => {
   });
 
   const pageVariants = {
-    initial: { opacity: 0, scale: 0.9 },
+    initial: { opacity: 0, scale: 0.95 },
     animate: {
       opacity: 1,
       scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
     exit: {
       opacity: 0,
-      scale: 0.9,
-      transition: {
-        duration: 0.3,
-      },
+      scale: 0.95,
+      transition: { duration: 0.3 },
     },
   };
 
@@ -45,10 +40,7 @@ const Login = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1,
-      },
+      transition: { duration: 0.6, staggerChildren: 0.1 },
     },
   };
 
@@ -63,19 +55,13 @@ const Login = () => {
       opacity: 1,
       height: "auto",
       marginBottom: "1rem",
-      transition: {
-        duration: 0.4,
-        ease: "easeInOut",
-      },
+      transition: { duration: 0.4, ease: "easeInOut" },
     },
     exit: {
       opacity: 0,
       height: 0,
       marginBottom: 0,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut",
-      },
+      transition: { duration: 0.3, ease: "easeInOut" },
     },
   };
 
@@ -99,7 +85,6 @@ const Login = () => {
           setToken(response.token);
           toast.success("🎉 تم إنشاء الحساب بنجاح");
 
-          // Redirect after successful signup
           navigate(from, { replace: true });
         } else {
           toast.error(response.message);
@@ -116,7 +101,6 @@ const Login = () => {
           setToken(response.data.token);
           toast.success("✅ تم تسجيل الدخول بنجاح");
 
-          // ✅ CRITICAL FIX: Redirect to the original page
           navigate(from, { replace: true });
         } else {
           toast.error(response.message);
@@ -130,32 +114,42 @@ const Login = () => {
     }
   };
 
+  // مسح حقل الاسم عند التبديل إلى تسجيل الدخول
+  useEffect(() => {
+    if (state.formType === "Login") {
+      setState((prev) => ({ ...prev, name: "" }));
+    }
+  }, [state.formType]);
+
   return (
+    // الخلفية الداكنة المتماشية مع التصميم
     <motion.div
       initial="initial"
       animate="animate"
       exit="exit"
       variants={pageVariants}
-      className="min-h-[80vh] flex items-center justify-center px-4"
+      className="min-h-screen flex items-center justify-center pt-32 pb-16 px-4 font-sans relative overflow-hidden"
       dir="rtl"
     >
+     
       <motion.form
         key={state.formType}
         onSubmit={handleSubmit}
         variants={formVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-5 p-8 w-full max-w-md border border-borderLight rounded-2xl text-textSoft text-sm shadow-2xl bg-white"
+        // تصميم زجاجي (Glassmorphism)
+        className="relative z-10 flex flex-col gap-5 p-8 sm:p-10 w-full max-w-md border border-white/10 rounded-[2.5rem] shadow-[0_0_40px_rgba(0,0,0,0.5)] bg-white/5 backdrop-blur-xl"
       >
         {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-2">
-          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary text-white text-2xl">
-            {state.formType === "Sign Up" ? "👤" : "🔐"}
+        <motion.div variants={itemVariants} className="text-center mb-4">
+          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#8349c7] to-[#9b61db] text-white shadow-lg border border-white/20">
+            {state.formType === "Sign Up" ? <UserPlus size={32} /> : <LogIn size={32} />}
           </div>
-          <p className="text-2xl font-bold text-primary">
+          <h2 className="text-3xl font-bold text-white mb-2">
             {state.formType === "Sign Up" ? "إنشاء حساب جديد" : "تسجيل الدخول"}
-          </p>
-          <p className="mt-2">
+          </h2>
+          <p className="text-gray-400 text-sm">
             {state.formType === "Sign Up"
               ? "انضم إلينا وابدأ رحلة العناية بصحتك"
               : "مرحباً بعودتك! سجل دخولك الآن"}
@@ -173,55 +167,66 @@ const Login = () => {
               exit="exit"
               className="w-full overflow-hidden"
             >
-              <label className="block text-textMain font-medium mb-2">
+              <label className="block text-gray-300 font-medium mb-2 text-sm">
                 الاسم الكامل
               </label>
-              <input
-                className="border border-borderLight bg-lightBg rounded-xl w-full p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-                type="text"
-                value={state.name}
-                onChange={(e) =>
-                  setState((prev) => ({ ...prev, name: e.target.value }))
-                }
-                required
-                placeholder="أدخل اسمك الكامل"
-              />
+              <div className="relative">
+                <User size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                <input
+                  className="border border-white/10 bg-[#0a051d]/50 rounded-xl w-full pr-12 pl-4 py-3.5 text-white placeholder-gray-600 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all"
+                  type="text"
+                  value={state.name}
+                  onChange={(e) =>
+                    setState((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Email Field */}
         <motion.div variants={itemVariants} className="w-full">
-          <label className="block text-textMain font-medium mb-2">
+          <label className="block text-gray-300 font-medium mb-2 text-sm">
             البريد الإلكتروني
           </label>
-          <input
-            className="border border-borderLight bg-lightBg rounded-xl w-full p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-            type="email"
-            value={state.email}
-            onChange={(e) =>
-              setState((prev) => ({ ...prev, email: e.target.value }))
-            }
-            required
-            placeholder="example@email.com"
-          />
+          <div className="relative">
+            <Mail size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" />
+            <input
+              className="border border-white/10 bg-[#0a051d]/50 rounded-xl w-full pr-12 pl-4 py-3.5 text-white placeholder-gray-600 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all"
+              type="email"
+              value={state.email}
+              onChange={(e) =>
+                setState((prev) => ({ ...prev, email: e.target.value }))
+              }
+              required
+              placeholder="example@email.com"
+              dir="ltr"
+            />
+          </div>
         </motion.div>
 
         {/* Password Field */}
         <motion.div variants={itemVariants} className="w-full">
-          <label className="block text-textMain font-medium mb-2">
+          <label className="block text-gray-300 font-medium mb-2 text-sm">
             كلمة المرور
           </label>
-          <input
-            className="border border-borderLight bg-lightBg rounded-xl w-full p-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-            type="password"
-            value={state.password}
-            onChange={(e) =>
-              setState((prev) => ({ ...prev, password: e.target.value }))
-            }
-            required
-            placeholder="********"
-          />
+          <div className="relative">
+            <Lock size={20} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" />
+            <input
+              className="border border-white/10 bg-[#0a051d]/50 rounded-xl w-full pr-12 pl-4 py-3.5 text-white placeholder-gray-600 focus:outline-none focus:border-[#9b61db] focus:ring-1 focus:ring-[#9b61db] transition-all"
+              type="password"
+              value={state.password}
+              onChange={(e) =>
+                setState((prev) => ({ ...prev, password: e.target.value }))
+              }
+              required
+              placeholder="••••••••"
+              dir="ltr"
+            />
+          </div>
         </motion.div>
 
         {/* Submit Button */}
@@ -229,15 +234,15 @@ const Login = () => {
           variants={itemVariants}
           type="submit"
           disabled={state.loading}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-primary to-secondary text-white w-full py-3.5 rounded-xl text-base font-bold hover:from-secondary hover:to-primary transition-all duration-300 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="bg-gradient-to-r from-[#8349c7] to-[#9b61db] border border-white/10 text-white w-full py-4 rounded-xl text-lg font-bold hover:shadow-[0_0_20px_rgba(155,97,219,0.4)] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed mt-4"
         >
           {state.loading ? (
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-3">
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
               {state.formType === "Sign Up"
-                ? "جاري إنشاء الحساب..."
+                ? "جاري الإنشاء..."
                 : "جاري تسجيل الدخول..."}
             </div>
           ) : state.formType === "Sign Up" ? (
@@ -248,53 +253,51 @@ const Login = () => {
         </motion.button>
 
         {/* Toggle between Sign Up/Login */}
-        <motion.div variants={itemVariants} className="text-center mt-4">
+        <motion.div variants={itemVariants} className="text-center mt-2">
           {state.formType === "Sign Up" ? (
-            <p>
+            <p className="text-gray-400">
               لديك حساب بالفعل؟{" "}
               <span
                 onClick={() =>
                   setState((prev) => ({ ...prev, formType: "Login" }))
                 }
-                className="text-primary font-bold cursor-pointer hover:underline"
+                className="text-[#9b61db] font-bold cursor-pointer hover:text-white transition-colors"
               >
-                تسجيل الدخول هنا
+                سجل الدخول هنا
               </span>
             </p>
           ) : (
-            <p>
+            <p className="text-gray-400">
               ليس لديك حساب؟{" "}
               <span
                 onClick={() =>
                   setState((prev) => ({ ...prev, formType: "Sign Up" }))
                 }
-                className="text-primary font-bold cursor-pointer hover:underline"
+                className="text-[#9b61db] font-bold cursor-pointer hover:text-white transition-colors"
               >
-                انشاء حساب جديد
+                انشئ حساباً جديداً
               </span>
             </p>
           )}
         </motion.div>
 
-        {/* Features */}
+        {/* Features Section */}
         <motion.div
           variants={itemVariants}
-          className="mt-6 pt-6 border-t border-borderLight"
+          className="mt-4 pt-6 border-t border-white/10"
         >
-          <p className="text-textMain font-bold mb-3">مزايا التسجيل:</p>
-          <ul className="text-textSoft text-sm space-y-2">
-            <li className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              حجز المواعيد بسهولة
-            </li>
-            <li className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              متابعة جميع المواعيد
-            </li>
-            <li className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              استلام التنبيهات والتحديثات
-            </li>
+          <p className="text-gray-300 font-bold mb-4 text-center">مزايا التسجيل معنا:</p>
+          <ul className="text-gray-400 text-sm space-y-3 px-2">
+            {[
+              "حجز استشارات فردية ومتابعتها",
+              "شراء الدورات التدريبية المعتمدة",
+              "طلب المكملات الغذائية بسهولة"
+            ].map((feature, index) => (
+              <li key={index} className="flex items-center gap-3">
+                <CheckCircle2 size={18} className="text-[#9b61db]" />
+                <span>{feature}</span>
+              </li>
+            ))}
           </ul>
         </motion.div>
       </motion.form>

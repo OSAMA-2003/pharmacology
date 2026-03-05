@@ -28,9 +28,6 @@ body {
   /* @apply bg-gradient-to-b from-[#1D014B] via-[#3A1F66] to-[#E4DFE6]  ; */
 }
 
-.gradient-secondary{
-  @apply bg-gradient-to-r from-[#2a0048] via-[#130348] to-[#021186]
-}
 
 .gradient-text{
   @apply bg-gradient-to-b from-[#2a0048] via-[#130348] to-[#021186] bg-clip-text text-transparent ;
@@ -56,6 +53,16 @@ h1,h2,h3,h4,h5,h6{
   .bg-primary{
     background-color: var(--color-primary) ;
   }
+
+  .gradient-secondary {
+  background: linear-gradient(
+    90deg,
+    #2a0048 0%,
+    #130348 50%,
+    #021186 100%
+  );
+}
+
 
   .shadow-bottom::after {
     content: "";

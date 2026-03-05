@@ -3,7 +3,7 @@ import React from "react";
 import { FiClock, FiCalendar, FiMonitor } from "react-icons/fi";
 import { coursesData } from "../data";
 import Carousel from "../common/Carousel";
-import AnimatedText from "../common/AnimatedContent"; // استيراد المكون
+import AnimatedText from "../common/AnimatedContent"; 
 import { Link } from "react-router-dom";
 
 const CoursesSection = () => {
@@ -50,7 +50,8 @@ const CoursesSection = () => {
             Meta2Icon={FiMonitor}
             ButtonIcon={FiCalendar}
             buttonText="اشترك الآن" 
-            gradientColor="from-[#1e4b8f]" // قمت بتعديل اللون ليتماشى مع هوية الكورسات
+            gradientColor="from-[#1e4b8f]" 
+            to={'/courses/:id'}
           />
         </AnimatedText>
         

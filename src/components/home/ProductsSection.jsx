@@ -55,7 +55,7 @@ const ProductsSection = () => {
                         Meta1Icon={FiPackage}
                         Meta2Icon={FiStar}
                         ButtonIcon={FaCartShopping}
-                        buttonText="أضف إلى السلة"
+                        buttonText="عرض المنتج"
                         gradientColor="from-[#4a3b2c]"
                         to={'/products/:id'}
                     />

@@ -6,6 +6,7 @@ import { productsData } from "../../components/data";
 import AnimatedText from "../../components/common/AnimatedContent";
 import Testimonials from "../../components/home/Testimonials";
 import { ArrowRight } from "lucide-react";
+import Button from "../../components/common/Button";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -75,10 +76,9 @@ const ProductDetails = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <button className="flex-1 bg-white/70 text-[#11053b] border-2  border-[#2b185e] hover:bg-[#2b185e]  py-4 md:px-40 rounded-xl font-bold text-lg transition-all active:scale-95">
+              <Button className="flex-1 bg-white/70 text-[#11053b] border-2  border-[#2b185e] hover:bg-[#2b185e]  py-4 md:px-40 rounded-xl font-bold text-lg transition-all active:scale-95">
                 اشتري الان
-              </button>
-
+              </Button>
 
               
 
@@ -87,7 +87,6 @@ const ProductDetails = () => {
                 احجز استشاره
               </button>
               </Link>
-             
             </div>
 
             {/* Dynamic Tabs System */}

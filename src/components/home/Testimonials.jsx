@@ -40,7 +40,7 @@ const testimonials = [
 
 const Card = ({ item }) => (
   <motion.div
-    className="bg-white/70 backdrop-blur-lg border border-gray-100 rounded-[28px] p-4 md:p-8 shadow-xl max-w-[280px]  md:max-w-[480px] mx-4 flex flex-col text-right"
+    className="bg-white backdrop-blur-lg border border-gray-100 rounded-[28px] p-4 md:p-8 shadow-xl max-w-[280px]  md:max-w-[480px] mx-4 flex flex-col text-right"
   >
     <Quote className="text-[#130348]   " size={26} />
 

@@ -1,159 +1,191 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createContext, useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import React, { createContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import {
+  mockLoadUserProfile,
+  mockUpdateUserProfile,
+} from "../pages/user/testUser";
 
-export const AppContext = createContext();
+// TODO (Backend Developer): Uncomment the line below to use real API calls
+// import axios from "axios";
 
-const AppContextProvider = (props) => {
-  const backendUrl =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+export const AppContext = createContext(null);
 
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
+const AppContextProvider = ({ children }) => {
+  // --- STATE MANAGEMENT ---
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Create axios instance with default config
-  const api = axios.create({
-    baseURL: backendUrl,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  // --- CONFIGURATION ---
+  // TODO (Backend Developer): Replace with your actual backend URL
+  const backendUrl = "http://localhost:4000";
 
-  // Add token to requests if available
-  api.interceptors.request.use(
-    (config) => {
-      if (token) {
-        config.headers.token = token;
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  // Handle 401 responses
-  api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
-        setToken("");
-        setUserData(null);
-        localStorage.removeItem("token");
-        toast.info("انتهت جلسة العمل، يرجى تسجيل الدخول مرة أخرى");
-        window.location.href = "/login";
-      }
-      return Promise.reject(error);
-    }
-  );
-
-  // Load user profile
-  const loadUserProfileData = useCallback(async () => {
-    if (!token) return;
-
+  /**
+   * Mock registration function.
+   * TODO (Backend Developer): Replace this with a real API call to your register endpoint.
+   */
+  const register = async (name, email, password) => {
     setLoading(true);
     try {
-      const { data } = await api.get("/api/v1/user/profile");
-      if (data.success) {
-        setUserData(data.user);
+      // --- FRONTEND MOCK ---
+      console.log("Attempting mock registration for:", name, email);
+      toast.info("محاكاة التسجيل: سيتم تسجيل دخولك الآن.");
+      // For mock purposes, registration will just log the user in.
+      await login(email, password);
+      // --- END FRONTEND MOCK ---
+
+      /*
+      // --- BACKEND INTEGRATION (EXAMPLE) ---
+      const response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password });
+      if (response.data.success) {
+        const receivedToken = response.data.token;
+        localStorage.setItem("token", receivedToken);
+        setToken(receivedToken);
+        toast.success("🎉 تم إنشاء الحساب بنجاح");
+      } else {
+        toast.error(response.data.message);
       }
+      */
     } catch (error) {
-      console.error("Failed to load user profile:", error);
-      if (error.response?.status !== 401) {
-        toast.error("فشل تحميل بيانات المستخدم");
-      }
+      console.error("Registration error:", error);
+      toast.error("فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.");
     } finally {
       setLoading(false);
     }
-  }, [token, api]);
+  };
+  // --- AUTHENTICATION LOGIC ---
 
-  // Update user profile
-  const updateUserProfile = async (updateData) => {
+  /**
+   * Mock login function.
+   * TODO (Backend Developer): Replace this with a real API call to your login endpoint.
+   * The API should return a token on success.
+   */
+  const login = async (email, password) => {
+    setLoading(true);
     try {
-      const { data } = await api.post("/api/v1/user/profile", updateData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // --- FRONTEND MOCK ---
+      console.log("Attempting mock login for:", email);
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (data.success) {
-        toast.success(data.message);
-        await loadUserProfileData();
-        return true;
+      // Simulate success
+      const mockToken = `mock_token_${Date.now()}`;
+      localStorage.setItem("token", mockToken);
+      setToken(mockToken);
+      toast.success("✅ تم تسجيل الدخول بنجاح (محاكاة)");
+      // --- END FRONTEND MOCK ---
+
+      /*
+      // --- BACKEND INTEGRATION (EXAMPLE) ---
+      const response = await axios.post(`${backendUrl}/api/user/login`, { email, password });
+      if (response.data.success) {
+        const receivedToken = response.data.token;
+        localStorage.setItem("token", receivedToken);
+        setToken(receivedToken);
+        toast.success("✅ تم تسجيل الدخول بنجاح");
       } else {
-        toast.error(data.message);
-        return false;
+        toast.error(response.data.message);
       }
+      */
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || error.message);
-      return false;
+      console.error("Login error:", error);
+      toast.error("فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Logout
+  /**
+   * Logout function. Clears user session.
+   */
   const logout = () => {
-    setToken("");
-    setUserData(null);
     localStorage.removeItem("token");
-    toast.success("تم تسجيل الخروج بنجاح");
+    setToken(null);
+    setUserData(null);
+    toast.info("تم تسجيل الخروج");
   };
 
-  // Auto-load user data when token changes
-  // In AppContext.jsx, update the useEffect:
-  useEffect(() => {
-    let mounted = true;
+  // --- USER PROFILE LOGIC ---
 
-    const loadProfile = async () => {
-      if (!token || !mounted) return;
-
+  /**
+   * Loads user profile data if a token exists.
+   * TODO (Backend Developer): Replace mockLoadUserProfile with a real API call.
+   */
+  const loadUserProfileData = async () => {
+    if (token) {
       setLoading(true);
       try {
-        const { data } = await api.get("/api/v1/user/profile");
-        if (data.success && mounted) {
-          setUserData(data.user);
+        // --- FRONTEND MOCK ---
+        const data = await mockLoadUserProfile();
+        setUserData(data);
+        // --- END FRONTEND MOCK ---
+
+        /*
+        // --- BACKEND INTEGRATION (EXAMPLE) ---
+        const response = await axios.get(`${backendUrl}/api/user/profile`, { headers: { token } });
+        if (response.data.success) {
+          setUserData(response.data.userData);
+        } else {
+          // Handle case where token is invalid
+          logout();
         }
+        */
       } catch (error) {
-        console.error("Failed to load user profile:", error);
-        // Don't show toast for 401 errors
-        if (error.response?.status !== 401 && error.response?.status !== 403) {
-          toast.error("فشل تحميل بيانات المستخدم");
-        }
+        console.error("Failed to load user data:", error);
+        // If token is invalid, log out the user
+        logout();
       } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
-    };
-
-    if (token) {
-      loadProfile();
-    } else {
-      setUserData(null);
     }
+  };
 
-    return () => {
-      mounted = false;
-    };
-  }, [token]); // Only depend on token, not loadUserProfileData
+  /**
+   * Updates user profile data.
+   * TODO (Backend Developer): Replace mockUpdateUserProfile with a real API call.
+   */
+  const updateUserProfile = async (formData) => {
+    if (!token) return false;
+    setLoading(true);
+    try {
+      // --- FRONTEND MOCK ---
+      const success = await mockUpdateUserProfile(formData);
+      if (success) {
+        // Refresh user data after update
+        await loadUserProfileData();
+      }
+      return success;
+      // --- END FRONTEND MOCK ---
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const value = {
-    backendUrl,
+  // Effect to load user data whenever the token changes (e.g., on login or app load)
+  useEffect(() => {
+    if (token) {
+      loadUserProfileData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const contextValue = {
     token,
-    setToken,
     userData,
-    setUserData,
     loading,
+    backendUrl,
+    register,
+    login,
+    logout,
     loadUserProfileData,
     updateUserProfile,
-    logout,
-    api,
   };
 
   return (
-    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };
 

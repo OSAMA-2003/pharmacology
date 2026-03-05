@@ -1,12 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext } from "react";
-import axios from "axios";
+// TODO (Backend Developer): Uncomment the line below to use real API calls
+// import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "./AppContext";
+import { productsData } from "../components/data"; // MOCK DATA
 
 export const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
+  // --- CONTEXTS & STATE ---
   const { backendUrl, token } = useContext(AppContext);
 
   const [products, setProducts] = useState([]);
@@ -17,7 +20,7 @@ export const ProductProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Format price
+  // --- HELPERS ---
   const formatPrice = (price) => {
     return new Intl.NumberFormat("ar-EG", {
       style: "currency",
@@ -27,10 +30,27 @@ export const ProductProvider = ({ children }) => {
     }).format(price || 0);
   };
 
-  // Get all products with filters
+  // --- PRODUCT API ---
+
+  /**
+   * Get all products with optional filters.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products
+   */
   const getAllProducts = async (filters = {}) => {
     try {
       setIsLoading(true);
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 500));
+      // Simple filtering for mock data
+      let filtered = productsData;
+      if (filters.category) {
+        filtered = productsData.filter(p => p.category === filters.category);
+      }
+      setProducts(filtered);
+      return { success: true, products: filtered };
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(`${backendUrl}/api/products`, {
         params: filters,
       });
@@ -39,6 +59,7 @@ export const ProductProvider = ({ children }) => {
         setProducts(response.data.products);
         return response.data;
       }
+      */
     } catch (error) {
       console.error("Error fetching products:", error);
       toast.error("فشل في تحميل المنتجات");
@@ -47,12 +68,23 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Get product details
+  /**
+   * Get details for a single product.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products/:productId
+   */
   const getProductDetails = async (productId) => {
     try {
       setIsLoading(true);
       const headers = token ? { token } : {};
 
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const product = productsData.find(p => String(p.id) === String(productId));
+      setCurrentProduct(product);
+      return product;
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(
         `${backendUrl}/api/products/${productId}`,
         { headers }
@@ -62,6 +94,7 @@ export const ProductProvider = ({ children }) => {
         setCurrentProduct(response.data.product);
         return response.data.product;
       }
+      */
     } catch (error) {
       console.error("Error fetching product details:", error);
       toast.error("فشل في تحميل تفاصيل المنتج");
@@ -70,9 +103,18 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Get featured products
+  /**
+   * Get featured products.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products/featured/all
+   */
   const getFeaturedProducts = async () => {
     try {
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setFeaturedProducts(productsData.slice(0, 4)); // Mock: first 4 products are featured
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(
         `${backendUrl}/api/products/featured/all`
       );
@@ -80,14 +122,24 @@ export const ProductProvider = ({ children }) => {
       if (response.data.success) {
         setFeaturedProducts(response.data.products);
       }
+      */
     } catch (error) {
       console.error("Error fetching featured products:", error);
     }
   };
 
-  // Get categories
+  /**
+   * Get all product categories.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products/categories/all
+   */
   const getCategories = async () => {
     try {
+      // --- FRONTEND MOCK ---
+      const mockCategories = [...new Set(productsData.map(p => p.category).filter(Boolean))];
+      setCategories(mockCategories);
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(
         `${backendUrl}/api/products/categories/all`
       );
@@ -95,12 +147,19 @@ export const ProductProvider = ({ children }) => {
       if (response.data.success) {
         setCategories(response.data.categories);
       }
+      */
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
   };
 
-  // Add to cart
+  // --- CART API ---
+
+  /**
+   * Add an item to the shopping cart.
+   * TODO (Backend Developer): Replace mock logic with a real API call to POST /api/products/cart/add
+   * This function should require a valid token.
+   */
   const addToCart = async (
     productId,
     quantity = 1,
@@ -115,6 +174,14 @@ export const ProductProvider = ({ children }) => {
 
       setIsLoading(true);
 
+      // --- FRONTEND MOCK ---
+      // This part is complex to mock without a backend state.
+      // For now, we just show a success message.
+      await new Promise(resolve => setTimeout(resolve, 500));
+      toast.success("تمت إضافة المنتج إلى السلة (محاكاة)");
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.post(
         `${backendUrl}/api/products/cart/add`,
         { productId, quantity, size, color },
@@ -130,6 +197,7 @@ export const ProductProvider = ({ children }) => {
         toast.error(response.data.message);
         return null;
       }
+      */
     } catch (error) {
       console.error("Error adding to cart:", error);
       toast.error(
@@ -141,7 +209,11 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Get cart
+  /**
+   * Get the current user's shopping cart.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products/cart
+   * This function should require a valid token.
+   */
   const getCart = async () => {
     try {
       if (!token) {
@@ -149,6 +221,12 @@ export const ProductProvider = ({ children }) => {
         return null;
       }
 
+      // --- FRONTEND MOCK ---
+      // Returning an empty cart for now.
+      setCart({ items: [], total: 0 });
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(`${backendUrl}/api/products/cart`, {
         headers: { token },
       });
@@ -157,6 +235,7 @@ export const ProductProvider = ({ children }) => {
         setCart(response.data.cart);
         return response.data.cart;
       }
+      */
     } catch (error) {
       console.error("Error getting cart:", error);
       setCart(null);
@@ -164,11 +243,22 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Update cart item quantity
+  /**
+   * Update an item's quantity in the cart.
+   * TODO (Backend Developer): Replace mock logic with a real API call to PUT /api/products/cart/item/:itemId
+   */
   const updateCartItem = async (itemId, quantity) => {
     try {
       if (!token) return null;
 
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 500));
+      toast.success("تم تحديث الكمية (محاكاة)");
+      await getCart(); // Refresh mock cart
+      return { success: true };
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.put(
         `${backendUrl}/api/products/cart/item/${itemId}`,
         { quantity },
@@ -180,6 +270,7 @@ export const ProductProvider = ({ children }) => {
         await getCart();
         return response.data;
       }
+      */
     } catch (error) {
       console.error("Error updating cart item:", error);
       toast.error(error.response?.data?.message || "فشل في تحديث الكمية");
@@ -187,11 +278,22 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Remove item from cart
+  /**
+   * Remove an item from the cart.
+   * TODO (Backend Developer): Replace mock logic with a real API call to DELETE /api/products/cart/item/:itemId
+   */
   const removeCartItem = async (itemId) => {
     try {
       if (!token) return null;
 
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 500));
+      toast.success("تم إزالة المنتج (محاكاة)");
+      await getCart(); // Refresh mock cart
+      return { success: true };
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.delete(
         `${backendUrl}/api/products/cart/item/${itemId}`,
         { headers: { token } }
@@ -202,6 +304,7 @@ export const ProductProvider = ({ children }) => {
         await getCart();
         return response.data;
       }
+      */
     } catch (error) {
       console.error("Error removing cart item:", error);
       toast.error("فشل في إزالة المنتج");
@@ -209,11 +312,21 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Clear cart
+  /**
+   * Clear all items from the cart.
+   * TODO (Backend Developer): Replace mock logic with a real API call to DELETE /api/products/cart/clear
+   */
   const clearCart = async () => {
     try {
       if (!token) return null;
 
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 500));
+      toast.success("تم تفريغ السلة (محاكاة)");
+      setCart(null);
+      return { success: true };
+      // --- END MOCK ---
+      /*
       const response = await axios.delete(
         `${backendUrl}/api/products/cart/clear`,
         { headers: { token } }
@@ -224,6 +337,7 @@ export const ProductProvider = ({ children }) => {
         setCart(null);
         return response.data;
       }
+      */
     } catch (error) {
       console.error("Error clearing cart:", error);
       toast.error("فشل في تفريغ السلة");
@@ -231,7 +345,13 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Create order
+  // --- ORDER API ---
+
+  /**
+   * Create a new order from the cart.
+   * TODO (Backend Developer): Replace mock logic with a real API call to POST /api/products/order/create
+   * This should handle payment gateway integration.
+   */
   const createOrder = async (orderData) => {
     try {
       if (!token) {
@@ -241,6 +361,14 @@ export const ProductProvider = ({ children }) => {
 
       setIsLoading(true);
 
+      // --- FRONTEND MOCK ---
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      toast.success("تم إنشاء الطلب بنجاح (محاكاة)");
+      await clearCart();
+      return { success: true };
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.post(
         `${backendUrl}/api/products/order/create`,
         orderData,
@@ -271,6 +399,7 @@ export const ProductProvider = ({ children }) => {
         toast.error(response.data.message);
         return null;
       }
+      */
     } catch (error) {
       console.error("Error creating order:", error);
       toast.error(error.response?.data?.message || "فشل في إنشاء الطلب");
@@ -280,11 +409,22 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // Get user orders
+  /**
+   * Get all orders for the current user.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products/orders/my-orders
+   */
   const getUserOrders = async () => {
     try {
       if (!token) return [];
 
+      // --- FRONTEND MOCK ---
+      // Returning an empty array for now.
+      // You can populate this with mock order data for testing.
+      setOrders([]);
+      return [];
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(
         `${backendUrl}/api/products/orders/my-orders`,
         { headers: { token } }
@@ -295,6 +435,7 @@ export const ProductProvider = ({ children }) => {
         return response.data.orders;
       }
       return [];
+      */
     } catch (error) {
       console.error("Error fetching orders:", error);
       return [];
@@ -302,10 +443,20 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Get order details
+  /**
+   * Get details for a single order.
+   * TODO (Backend Developer): Replace mock logic with a real API call to GET /api/products/order/:orderId
+   */
   const getOrderDetails = async (orderId) => {
     try {
       if (!token) return null;
 
+      // --- FRONTEND MOCK ---
+      // Returning null for now.
+      return null;
+      // --- END MOCK ---
+      /*
+      // --- BACKEND INTEGRATION ---
       const response = await axios.get(
         `${backendUrl}/api/products/order/${orderId}`,
         { headers: { token } }
@@ -315,6 +466,7 @@ export const ProductProvider = ({ children }) => {
         return response.data.order;
       }
       return null;
+      */
     } catch (error) {
       console.error("Error fetching order details:", error);
       return null;
@@ -322,6 +474,10 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Poll for order status
+  /**
+   * Polls the backend to check for payment status after redirecting to a payment gateway.
+   * TODO (Backend Developer): This logic is tightly coupled with the backend. Ensure the GET /api/products/order/:orderId endpoint is efficient.
+   */
   const startOrderPolling = (orderId, paymentWindow) => {
     let pollCount = 0;
     const maxPolls = 30;
@@ -366,6 +522,7 @@ export const ProductProvider = ({ children }) => {
     }, 5000);
   };
 
+  // --- DERIVED STATE & HELPERS ---
   // Calculate discount percentage
   const calculateDiscountPercentage = (price, discountPrice) => {
     if (!discountPrice || !price) return 0;
@@ -386,6 +543,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   return (
+    // --- PROVIDER VALUE ---
     <ProductContext.Provider
       value={{
         products,

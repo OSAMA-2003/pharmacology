@@ -81,7 +81,6 @@ const Navbar = () => {
               {showDropdown && (
                 <div className="absolute top-14 left-0 min-w-48 bg-white shadow-xl border border-gray-100 rounded-xl flex flex-col gap-2 p-3 z-20">
                   <button onClick={() => { setShowDropdown(false); navigate("/my-profile"); }} className="text-right hover:text-[#3a5b8c] cursor-pointer transition py-2 px-2 rounded-lg hover:bg-gray-50">الملف الشخصي</button>
-                  <button onClick={() => { setShowDropdown(false); navigate("/my-appointments"); }} className="text-right hover:text-[#3a5b8c] cursor-pointer transition py-2 px-2 rounded-lg hover:bg-gray-50">المواعيد</button>
                   <hr className="my-1 border-gray-100" />
                   <button onClick={() => { setShowDropdown(false); logout(); }} className="text-right text-red-500 hover:text-red-600 cursor-pointer transition py-2 px-2 rounded-lg hover:bg-red-50">تسجيل الخروج</button>
                 </div>
@@ -89,8 +88,8 @@ const Navbar = () => {
             </div>
           ) : (
             <Button
-              onClick={() => navigate("/login")}
-              className="bg-[#3a5b8c] text-white px-6 py-1.5 md:px-8 md:py-2 rounded-xl text-sm md:text-base font-medium hover:bg-[#2b4469] transition shadow-sm hidden lg:block"
+            className=" px-6 py-1.5 md:px-8 md:py-2  hidden lg:block"
+            to={'/login'}
             >
               دخول
             </Button>
@@ -133,7 +132,6 @@ const Navbar = () => {
           {token ? (
             <div className="flex flex-col gap-2">
               <NavLink onClick={() => setShowMenu(false)} to="/my-profile" className="block text-center py-3 px-4 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-800 font-medium transition">الملف الشخصي</NavLink>
-              <NavLink onClick={() => setShowMenu(false)} to="/my-appointments" className="block text-center py-3 px-4 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-800 font-medium transition">المواعيد</NavLink>
               <button onClick={() => { setShowMenu(false); logout(); }} className="mt-2 bg-red-50 text-red-500 border border-red-100 px-8 py-3 rounded-xl font-medium w-full hover:bg-red-500 hover:text-white transition">تسجيل الخروج</button>
             </div>
           ) : (

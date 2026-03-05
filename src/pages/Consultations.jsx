@@ -6,10 +6,13 @@ import { CalendarDays, Star, Search } from "lucide-react";
 import { consultationsData } from "../components/data";
 import AnimatedText from "../components/common/AnimatedContent";
 import Card from "../components/common/Card";
+import AppointmentModal from "../components/AppointmentModal";
 
 const Consultations = () => {
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
   const [consultations, setConsultations] = useState(consultationsData);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(consultationsData);
@@ -28,16 +31,31 @@ const Consultations = () => {
     }
   }, [searchTerm, consultations]);
 
-  const handleBookClick = (id) => {
-    navigate(`/appointment/${id}`);
-  };
-
   const cardHoverVariants = {
     hover: {
       y: -8,
       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.25)",
       transition: { duration: 0.3 },
     },
+  };
+
+  const handleOpenModal = (item) => {
+    const serviceForModal = {
+      id: item.id,
+      title: item.title,
+      subtitle: `جلسة فيديو مباشرة بخصوص: ${item.title}`,
+      fees: item.price.replace(/[^0-9]/g, ''),
+      duration: "45", // Default duration
+      features: [
+        "جلسة فيديو مباشرة عبر الإنترنت",
+        "تقييم شامل للحالة الصحية",
+        "توصيات غذائية مخصصة",
+        "خطة عمل واضحة ومحددة",
+      ],
+      description: item.desc,
+    };
+    setSelectedService(serviceForModal);
+    setIsModalOpen(true);
   };
 
   return (
@@ -101,8 +119,7 @@ const Consultations = () => {
                 Meta2Icon={Star}
                 buttonText="احجز الآن"
                 gradientColor="from-[#1e4b8f]/90"
-                onClick={() => handleBookClick(item.id)}
-                
+                onClick={() => handleOpenModal(item)}
               />
               </AnimatedText>
             </motion.div>
@@ -119,6 +136,12 @@ const Consultations = () => {
           </AnimatedText>
         )}
       </div>
+
+      <AppointmentModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        serviceInfo={selectedService} 
+      />
     </div>
   );
 };

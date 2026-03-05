@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { MONTHS_ARABIC, DAYS_ARABIC } from "../../constants/dates";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Calendar = ({
   currentMonth,
@@ -68,34 +69,22 @@ const Calendar = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 border border-borderLight ">
+    <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
       {/* Calendar Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-primary">اختر موعد الحجز</h2>
+      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-800">اختر تاريخ الحجز</h2>
 
         <div className="flex items-center gap-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onMonthChange("prev")}
-            className="bg-lightBg text-textMain p-3 rounded-xl hover:bg-primary hover:text-white transition-colors"
+            className="bg-gray-100 text-gray-600 p-3 rounded-xl hover:bg-[#9b61db] hover:text-white transition-colors"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
+            <ArrowRight size={20} />
           </motion.button>
 
-          <span className="text-xl font-bold text-primary min-w-[150px] text-center">
+          <span className="text-lg font-bold text-gray-800 min-w-[150px] text-center">
             {MONTHS_ARABIC[currentMonth]} {currentYear}
           </span>
 
@@ -103,21 +92,9 @@ const Calendar = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onMonthChange("next")}
-            className="bg-lightBg text-textMain p-3 rounded-xl hover:bg-primary hover:text-white transition-colors"
+            className="bg-gray-100 text-gray-600 p-3 rounded-xl hover:bg-[#9b61db] hover:text-white transition-colors"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+           <ArrowLeft size={20} />
           </motion.button>
         </div>
       </div>
@@ -127,7 +104,7 @@ const Calendar = ({
         {DAYS_ARABIC.map((day, index) => (
           <div
             key={index}
-            className="text-center font-bold text-primary text-sm py-2"
+            className="text-center font-bold text-gray-500 text-xs md:text-sm  py-2"
           >
             {day}
           </div>
@@ -153,14 +130,14 @@ const Calendar = ({
               onClick={() =>
                 status === "available" && onDateSelect(day.dateKey)
               }
-              className={`aspect-square flex flex-col items-center justify-center rounded-xl transition-all duration-300 border-2 relative overflow-hidden ${
+              className={`aspect-square  flex-col items-center justify-center rounded-2xl transition-all duration-300 border-2 relative overflow-hidden ${
                 status === "selected"
-                  ? "bg-gradient-to-r from-primary to-secondary text-white border-primary"
+                  ? "bg-gradient-to-br from-[#9b61db] to-[#8349c7] text-white border-transparent shadow-lg"
                   : status === "past"
-                  ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                  ? "bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed"
                   : status === "fullyBooked"
-                  ? "bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed opacity-70"
-                  : "bg-white text-textMain border-borderLight hover:border-primary cursor-pointer"
+                  ? "bg-red-50 text-red-400 border-red-100 cursor-not-allowed line-through"
+                  : "bg-white text-gray-700 border-gray-200 hover:border-[#9b61db] hover:text-[#9b61db] hover:bg-purple-50 cursor-pointer"
               }`}
             >
               {/* Blur overlay for fully booked dates */}
@@ -188,66 +165,35 @@ const Calendar = ({
               {/* Day number */}
               <p
                 className={`text-xl font-bold relative z-10 ${
-                  status === "fullyBooked"
-                    ? "text-gray-600 filter blur-[0.5px]"
-                    : ""
+                  status === "fullyBooked" ? "opacity-50" : ""
                 }`}
               >
                 {day.day}
               </p>
 
-              {/* Status indicator */}
-              <span
-                className={`text-[10px] mt-1 relative z-10 font-medium ${
-                  status === "fullyBooked"
-                    ? "text-gray-700 filter blur-[0.5px]"
-                    : ""
-                }`}
-              >
-                {status === "fullyBooked" ? "مكتمل" : "متاح"}
-              </span>
-
-              {/* X icon for fully booked */}
-              {status === "fullyBooked" && (
-                <div className="absolute top-1 right-1">
-                  <svg
-                    className="w-5 h-5 text-red-500 opacity-80"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-              )}
             </motion.div>
           );
         })}
       </div>
 
       {/* Legend */}
-      <div className="mt-6 pt-6 border-t border-borderLight">
+      <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-r from-primary to-secondary"></div>
-            <span className="text-sm text-textMain">محدد</span>
+            <div className="w-4 h-4 rounded-md bg-gradient-to-br from-[#9b61db] to-[#8349c7]"></div>
+            <span className="text-sm text-gray-600">اليوم المحدد</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-white border border-borderLight"></div>
-            <span className="text-sm text-textMain">متاح</span>
+            <div className="w-4 h-4 rounded-md bg-white border-2 border-gray-200"></div>
+            <span className="text-sm text-gray-600">يوم متاح</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-gray-200 relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-400/50 to-gray-500/30 blur-[0.5px] rounded"></div>
-            </div>
-            <span className="text-sm text-textMain">محجوز</span>
+            <div className="w-4 h-4 rounded-md bg-red-50 border-2 border-red-100 line-through"></div>
+            <span className="text-sm text-gray-600">محجوز بالكامل</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-gray-100 border border-gray-300"></div>
-            <span className="text-sm text-textMain">منتهي</span>
+            <div className="w-4 h-4 rounded-md bg-gray-50 border-2 border-gray-100"></div>
+            <span className="text-sm text-gray-600">يوم فائت</span>
           </div>
         </div>
       </div>
