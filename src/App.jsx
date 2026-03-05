@@ -9,39 +9,44 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import WhatsAppCompact from "./components/common/WhatsAppCompact";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 // Pages
 import Home from "./pages/Home";
-
 import Appointment from "./pages/appointment/Appointments";
 import Login from "./pages/Login";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MyProfile from "./pages/user/MyProfile";
 import MyAppointments from "./pages/user/MyAppointments";
-
-// Protected Route Wrapper
-import ProtectedRoute from "./components/common/ProtectedRoute";
 import Service from "./pages/Service";
 import ProductsPage from "./pages/product/ProductsPage";
 import ProductDetails from "./pages/product/ProductDetails";
 import Courses from "./pages/course/Courses";
+import CourseDetails from "./pages/course/CourseDetails";
+import MyCourses from "./pages/course/MyCourses";
 import Consultations from "./pages/Consultations";
 import Blogs from "./pages/blog/Blogs";
 import BlogDetails from "./pages/blog/BlogDetails";
 import CartPage from "./pages/product/CartPage";
-import CourseDetails from "./pages/course/CourseDetails";
-import MyCourses from "./pages/course/MyCourses";
 
+// Protected Route Wrapper
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 const App = () => {
   const location = useLocation();
-  // Hide Navbar and Footer on the login page
-  const hideLayout = location.pathname === '/login';
+
+  // Hide Navbar and Footer on login page
+  const hideLayout = location.pathname === "/login";
 
   return (
-    <div className="  w-full min-h-screen flex flex-col">
-      {/* <ToastContainer
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Scroll to top on route change */}
+      <ScrollToTop />
+
+      {/* Toast Notifications */}
+      {/* 
+      <ToastContainer
         position="top-left"
         autoClose={5000}
         hideProgressBar={false}
@@ -54,10 +59,13 @@ const App = () => {
         theme="light"
         toastClassName="font-sans min-h-[60px] text-lg"
         bodyClassName="text-right py-3"
-      /> */}
+      />
+      */}
+
       {!hideLayout && <Navbar />}
 
       <main className="flex-grow">
+        <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
@@ -69,13 +77,11 @@ const App = () => {
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/consultations" element={<Consultations />} />
-            <Route path="/products" element={<ProductsPage/>} />
-            <Route path="/products/:id" element={<ProductDetails/>} />
-            <Route path="/blogs" element={<Blogs/>} />
-            <Route path="/blogs/:id" element={<BlogDetails/>} />
-            <Route path="/cart" element={<CartPage/>} />
-
-
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blogs/:id" element={<BlogDetails />} />
+            <Route path="/cart" element={<CartPage />} />
 
             {/* Protected Routes */}
             <Route
@@ -86,31 +92,35 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/my-profile"
               element={
                 // <ProtectedRoute>
-                  <MyProfile />
+                <MyProfile />
                 // </ProtectedRoute>
               }
             />
+
             <Route
               path="/my-appointments"
               element={
                 // <ProtectedRoute>
-                  <MyAppointments />
+                <MyAppointments />
                 // </ProtectedRoute>
               }
             />
+
             <Route
               path="/my-courses"
               element={
                 // <ProtectedRoute>
-                  <MyCourses />
+                <MyCourses />
                 // </ProtectedRoute>
               }
             />
           </Routes>
+        </AnimatePresence>
       </main>
 
       {!hideLayout && <Footer />}
