@@ -5,31 +5,39 @@ import img1 from '../../assets/header-1.png';
 import img2 from "../../assets/header-2.jpg";
 import img3 from "../../assets/header-3.jpg";
 import img4 from "../../assets/header-4.jpg";
+import img5 from "../../assets/Dr ahmed V 1.png";
+import vid6 from "../../assets/Dr ahmed video v1.mp4";
 import Button from "../common/Button";
 
-// نحتفظ بالبيانات الأصلية خارج المكون لتحديد ترتيب النقاط الثابت
+// تحديث هيكل البيانات لدعم الصور والفيديوهات، وفصل الموبايل عن الديسكتوب
 const initialData = [
   {
     id: 1,
-    image: img1,
+    // Desktop Media (e.g., Video)
+    desktop: { url: img2, type: "img" },
+    // Mobile Media (e.g., Image specifically for phone)
+    mobile: { url: vid6, type: "video" },
     title: "ما بين الدواء والغذاء قصة.. سأحكيها لك.",
     des: "استشارات متخصصة ودورات معتمدة في التغذية السريرية وعلم الأدوية من نخبة الخبراء في المجال.",
   },
   {
     id: 2,
-    image: img2,
+    desktop: { url: img1, type: "image" },
+    mobile: { url: img5, type: "image" }, 
     title: "صحتك تبدأ من غذائك",
     des: "برامج غذائية مصممة خصيصاً لتناسب احتياجاتك الصحية وأهدافك الشخصية بخطوات علمية مدروسة.",
   },
   {
     id: 3,
-    image: img3,
+    desktop: { url: img3, type: "image" },
+    // mobile: { url: img3, type: "image" },
     title: "الرعاية المتكاملة لحياتك",
     des: "نقدم لك استشارات شاملة تجمع بين الطب الحديث وأسلوب الحياة الصحي لضمان أفضل النتائج.",
   },
   {
     id: 4,
-    image: img4,
+    desktop: { url: img4, type: "image" },
+    // mobile: { url: img4, type: "image" },
     title: "خطتك الدوائية بأمان",
     des: "تقييم شامل لأدويتك ومكملاتك الغذائية لتجنب التفاعلات الضارة وتحقيق أقصى استفادة.",
   },
@@ -73,32 +81,50 @@ const Header = () => {
   };
 
   const handleDotClick = (targetId) => {
-    // 1. نبحث عن موقع العنصر المطلوب داخل المصفوفة الحالية
     const currentIndex = items.findIndex((item) => item.id === targetId);
-    
-    // 2. إذا كان هو المعروض حالياً (العنصر الثاني / index 1)، لا تفعل شيئاً
     if (currentIndex === 1) return;
 
-    // 3. نحسب عدد الإزاحات المطلوبة لجعل العنصر الهدف في الـ index 1
     setItems((prevItems) => {
-      // نحتاج لعمل Shift بمقدار (currentIndex - 1)
       let shifts = currentIndex - 1;
-      
-      // إذا كان العنصر هو الأخير (index 0)، نحتاج لعمل إزاحة للخلف
       if (shifts < 0) shifts = prevItems.length + shifts;
-
       return [...prevItems.slice(shifts), ...prevItems.slice(0, shifts)];
     });
+  };
+
+  // دالة مساعدة لعمل Render للميديا (فيديو أو صورة)
+  const renderMedia = (mediaObj, visibilityClass) => {
+    if (!mediaObj) return null;
+
+    if (mediaObj.type === "video") {
+      return (
+        <video
+          src={mediaObj.url}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={`absolute inset-0 w-full h-full object-cover z-0 ${visibilityClass}`}
+        />
+      );
+    }
+
+    return (
+      <img
+        src={mediaObj.url}
+        alt="Carousel background"
+        className={`absolute inset-0 w-full h-full object-cover z-0 ${visibilityClass}`}
+      />
+    );
   };
 
   return (
     <header className="relative w-full h-screen overflow-hidden bg-gray-900 text-white" dir="rtl">
       {/* Social Media Sidebar */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-6 border-r border-gray-400/50 pr-6 hidden md:flex"  >
-        <a href="https://www.facebook.com/DrAhmedElkhaateeb" target="_blank" className="text-xl hover:text-blue-400 transition-colors"><FaFacebookF /></a>
-        <a href="https://www.instagram.com/drahmedelkhateeb" target="_blank" className="text-xl hover:text-pink-400 transition-colors"><FaInstagram /></a>
-        <a href="https://www.youtube.com/@Dr_Ahmed_elkhateeb" target="_blank" className="text-xl hover:text-red-600 transition-colors"><FaYoutube /></a>
-        <a href="https://tiktok.com/@drahmedelkhateeb" target="_blank" className="text-xl hover:text-black transition-colors"><FaTiktok /></a>
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-6 border-r border-gray-400/50 pr-6 hidden md:flex">
+        <a href="https://www.facebook.com/DrAhmedElkhaateeb" target="_blank" rel="noreferrer" className="text-xl hover:text-blue-400 transition-colors"><FaFacebookF /></a>
+        <a href="https://www.instagram.com/drahmedelkhateeb" target="_blank" rel="noreferrer" className="text-xl hover:text-pink-400 transition-colors"><FaInstagram /></a>
+        <a href="https://www.youtube.com/@Dr_Ahmed_elkhateeb" target="_blank" rel="noreferrer" className="text-xl hover:text-red-600 transition-colors"><FaYoutube /></a>
+        <a href="https://tiktok.com/@drahmedelkhateeb" target="_blank" rel="noreferrer" className="text-xl hover:text-black transition-colors"><FaTiktok /></a>
       </div>
 
       {/* Carousel Container */}
@@ -107,47 +133,45 @@ const Header = () => {
           <div
             key={item.id}
             onClick={() => handleItemClick(index)}
-            className={`carousel-item shadow-2xl bg-center bg-cover w-full h-full transition-all duration-700 ease-in-out ${
+            className={`carousel-item shadow-2xl overflow-hidden transition-all duration-700 ease-in-out ${
               index !== 1 ? "cursor-pointer hover:brightness-110" : ""
             }`}
-            style={{
-              backgroundImage: `linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url(${item.image})`,
-            }}
           >
+            {/* Desktop Media (Hidden on Mobile) */}
+            {renderMedia(item.desktop, "hidden md:block")}
+
+            {/* Mobile Media (Hidden on Desktop) */}
+            {renderMedia(item.mobile, "block md:hidden")}
+
+            {/* Dark Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-l from-black/80 to-black/20 z-10 pointer-events-none"></div>
+
             {/* Content Area */}
-            <div className="carousel-content absolute top-1/2 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right ">
-              <h1 className="pointer-events-none text-4xl md:text-6xl font-bold leading-tight mb-4 md:mb-6 text-white drop-shadow-lg pointer-events-auto">
+            <div className="carousel-content absolute top-1/2 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 md:mb-6 text-white drop-shadow-lg pointer-events-none">
                 {item.title}
               </h1>
-              <p className= "pointer-events-none text-base md:text-xl text-gray-200 mb-6 md:mb-8 leading-relaxed pointer-events-auto">
+              <p className="text-base md:text-xl text-gray-200 mb-6 md:mb-8 leading-relaxed pointer-events-none">
                 {item.des}
               </p>
-               <Button to={'/consultations'} className="cursor-pointer" >
-              ابدأ رحلتك الصحيه الان
-              </Button>
-
-             
+              <div className="pointer-events-auto w-fit">
+                <Button to={'/consultations'} className="cursor-pointer">
+                  ابدأ رحلتك الصحيه الان
+                </Button>
+              </div>
             </div>
-
-            
           </div>
         ))}
       </div>
 
       {/* Controls */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl">
-        <Button
-          onClick={handlePrev}
-          className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-transform"
-        >
+        <Button onClick={handlePrev} className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-transform">
           <FaChevronRight />
         </Button>
         <div className="flex gap-2">
-          {/* هنا نقوم بعمل loop على البيانات الثابتة (initialData) للحفاظ على ترتيب النقاط */}
           {initialData.map((dataItem) => {
-            // التحقق مما إذا كان هذا الـ ID هو المعروض حالياً (أي الموجود في items[1])
             const isActive = items[1]?.id === dataItem.id;
-
             return (
               <span
                 key={dataItem.id}
@@ -159,10 +183,7 @@ const Header = () => {
             );
           })}
         </div>
-        <Button
-          onClick={handleNext}
-          className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-transform"
-        >
+        <Button onClick={handleNext} className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-transform">
           <FaChevronLeft />
         </Button>
       </div>
@@ -213,7 +234,7 @@ const Header = () => {
 
         .carousel-item:nth-child(2) .carousel-content h1 { opacity: 0; animation: fadeInRtl 0.6s ease-out 0.4s 1 forwards; }
         .carousel-item:nth-child(2) .carousel-content p { opacity: 0; animation: fadeInRtl 0.6s ease-out 0.6s 1 forwards; }
-        .carousel-item:nth-child(2) .carousel-content button { opacity: 0; animation: fadeInRtl 0.6s ease-out 0.8s 1 forwards; }
+        .carousel-item:nth-child(2) .carousel-content .pointer-events-auto { opacity: 0; animation: fadeInRtl 0.6s ease-out 0.8s 1 forwards; }
       `}} />
     </header>
   );
