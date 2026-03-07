@@ -32,7 +32,7 @@ const Card = ({
         </div>
 
         {/* Price Badge */}
-        <div className="absolute top-[41%] left-6 bg-[#1D014B] text-[#E4DFE6] px-4 py-1.5 rounded-lg font-bold text-sm shadow-md border border-[#4e2d8f] z-10">
+        <div className="absolute top-[41%] left-6 gradient-secondary  text-[#E4DFE6] px-4 py-1.5 rounded-lg font-bold text-sm shadow-md border border-[#4e2d8f] z-10">
           {item.price || item.category}
         </div>
 

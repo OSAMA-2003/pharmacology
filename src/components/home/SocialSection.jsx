@@ -6,8 +6,8 @@ const SocialSection = () => {
     {
       id: 1,
       platform: "يوتيوب",
-      icon: <FaYoutube className="text-2xl text-red-500" />,
-      iconBg: "bg-red-50",
+      icon: <FaYoutube className="text-2xl text-white" />,
+      iconBg: "bg-red-600",
       handle: "Pharmacology",
       followers: "3.78 M",
       link: "https://www.youtube.com/@Dr_Ahmed_elkhateeb",
@@ -15,36 +15,37 @@ const SocialSection = () => {
     {
       id: 2,
       platform: "فيسبوك",
-      icon: <FaFacebookF className="text-2xl text-blue-600" />,
-      iconBg: "bg-blue-50",
+      icon: <FaFacebookF className="text-2xl text-white" />,
+      iconBg: "bg-blue-600",
       handle: "AhmedElkhaateeb",
       followers: "3.1 M",
       link: "https://facebook.com/AhmedElkhaateeb",
     },
-    {
+     {
       id: 3,
-      platform: "انستجرام",
-      icon: <FaInstagram className="text-2xl text-pink-600" />,
-      iconBg: "bg-pink-50",
-      handle: "drahmedelkhateebb",
-      followers: "330 K",
-      link: "https://www.instagram.com/drahmedelkhateeb",
-    },
-    {
-      id: 4,
       platform: "تيك توك",
-      icon: <FaTiktok className="text-2xl text-black" />,
-      iconBg: "bg-gray-100",
+      icon: <FaTiktok className="text-2xl text-white" />,
+      iconBg: "bg-black",
       handle: "drahmedelkhateeb",
       followers: "375.5 K",
       link: "https://tiktok.com/@drahmedelkhateeb",
     },
+    {
+      id: 4,
+      platform: "انستجرام",
+      icon: <FaInstagram className="text-2xl text-white" />,
+      iconBg: "bg-pink-600",
+      handle: "drahmedelkhateebb",
+      followers: "330 K",
+      link: "https://www.instagram.com/drahmedelkhateeb",
+    },
+   
 
     {
       id: 5,
       platform: "X",
-      icon: <FaXTwitter className="text-2xl text-black" />,
-      iconBg: "bg-gray-100",
+      icon: <FaXTwitter className="text-2xl text-white" />,
+      iconBg: "bg-black",
       handle: "PharmaDrAhmed",
       followers: "1 K",
       link: "https://x.com/PharmaDrAhmed",
@@ -52,7 +53,7 @@ const SocialSection = () => {
   ];
 
   return (
-    <section  className="pb-10 px-6 md:px-20 font-sans">
+    <section dir="rtl" className="pb-10 px-6 md:px-20 font-sans">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -66,7 +67,7 @@ const SocialSection = () => {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {socialData.map((item) => (
             <a
               key={item.id}
@@ -83,7 +84,7 @@ const SocialSection = () => {
               </div>
 
               {/* Platform */}
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-bold gradient-text  mb-2">
                 {item.platform}
               </h3>
 
@@ -94,7 +95,7 @@ const SocialSection = () => {
 
               {/* Followers */}
               <div className="mt-auto">
-                <p className="text-xl font-bold text-gray-900 mb-1">
+                <p dir="ltr" className="text-xl font-bold gradient-text  mb-1">
                   {item.followers}
                 </p>
                 <p className="text-gray-500 text-sm">متابع</p>

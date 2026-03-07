@@ -56,10 +56,10 @@ const CourseDetails = () => {
   };
 
   return (
-    <div className="min-h-screen pt-42 pb-20 px-4 md:px-10 font-sans relative overflow-hidden" dir="rtl">
+    <div className="min-h-screen  pt-42  px-4 md:px-10 font-sans relative overflow-hidden" dir="rtl">
       
       {/* تأثير إضاءة خفيف في الخلفية كما في الصورة */}
-      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#2d1b5a]/30 to-transparent pointer-events-none"></div>
+      <div className="  absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#2d1b5a]/30 to-transparent pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         
@@ -203,19 +203,25 @@ const CourseDetails = () => {
 
       </div>
 
-    <div dir="ltr" >
-         <AnimatedText delay={0.7}>
-            <Testimonials/>
-        </AnimatedText>
-    </div>
+    
 
       <AppointmentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         serviceInfo={selectedService}
       />
+
+      <div dir="ltr" >
+         <AnimatedText delay={0.7}>
+            <Testimonials/>
+        </AnimatedText>
+    </div>
       
     </div>
+
+
+
+    
   );
 };
 

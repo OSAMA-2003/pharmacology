@@ -9,26 +9,28 @@ const CTA = () => {
      <section className="py-8 md:py-16 px-4 md:px-10 " dir="rtl">
       <AnimatedText >
           <div className="my-4 md:mt-20 max-w-7xl mx-auto relative bg-gradient-to-t from-[#1D014B] via-[#3A1F66] to-[#E4DFE6]  rounded-[2rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between shadow-sm border border-blue-50 ">
-            <div className="md:w-3/5 text-right z-10 relative">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            <div className="w-1/1 text-center md:text-right z-10 relative">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 هل تحتاج إلى إرشاد متخصص لحالتك؟
               </h2>
-              <p className=" font-medium mb-8 text-sm md:text-base leading-relaxed max-w-xl">
+              <p className=" font-medium mb-8 text-md md:text-2xl leading-relaxed max-w-xl">
                 المقالات تمنحك المعرفة، لكن الاستشارة تمنحك خطة علاجية مخصصة لك.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 ">
+              <div className="flex  flex-col sm:flex-row gap-4 ">
                 <Button 
                   to={'/consultations'}
+                  className="w-full"
                 >
                   أحجز موعدك
                 </Button>
                 
                 <Button 
-                 to={'/courses'}
+                 to={'/blogs'}
+                 className="w-full"
                 >
                   
-                  تصفح الكورسات
+                  تصفح المقالات
                 </Button>
               </div>
             </div>

@@ -23,7 +23,7 @@ const Blogs = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16" dir="rtl">
+    <div className="min-h-screen " dir="rtl">
       
       {/* ==================== Hero Section ====================== */}
       <div className="relative w-full h-screen flex items-center justify-center overflow-hidden">
@@ -49,7 +49,8 @@ const Blogs = () => {
 
           <AnimatedText delay={0.3}>
             <Button
-              onClick={() => navigate("/consultation")}
+              to={'/consultations'}
+              className="px-20 py-4"
             >
               <div
                className=" flex items-center justify-center gap-2 mx-auto "
@@ -110,10 +111,7 @@ const Blogs = () => {
           ))}
         </div>
 
-        {/* ==================== Bottom CTA Section ================ */}
-        <AnimatedText delay={0.3}>
-          <CTA/>
-        </AnimatedText>
+       
       </div>
     </div>
   );

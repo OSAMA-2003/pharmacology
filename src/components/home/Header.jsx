@@ -61,7 +61,7 @@ const Header = () => {
   useEffect(() => {
     const autoPlayInterval = setInterval(() => {
       setItems((prevItems) => [...prevItems.slice(1), prevItems[0]]);
-    }, 75000);
+    }, 6000);
 
     return () => clearInterval(autoPlayInterval);
   }, []);
@@ -148,7 +148,7 @@ const Header = () => {
             <div className="absolute inset-0 bg-gradient-to-l from-black/80 to-black/20 z-10 pointer-events-none"></div>
 
             {/* Content Area */}
-            <div className="carousel-content absolute top-2/3 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
+            <div className="carousel-content absolute top-2/3 md:top-1/2 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 md:mb-6 text-white drop-shadow-lg pointer-events-none">
                 {item.title}
               </h1>
@@ -166,7 +166,7 @@ const Header = () => {
       </div>
 
       {/* Controls */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl">
+      <div className="absolute bottom-3 md:bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl">
         <Button onClick={handlePrev} className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-transform">
           <FaChevronRight />
         </Button>

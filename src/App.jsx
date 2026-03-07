@@ -42,7 +42,7 @@ const App = () => {
   return (
     <div className="w-full min-h-screen flex flex-col">
       {/* Scroll to top on route change */}
-      <ScrollToTop />
+     
 
       {/* Toast Notifications */}
       {/* 
@@ -121,6 +121,7 @@ const App = () => {
             />
           </Routes>
         </AnimatePresence>
+         <ScrollToTop />
       </main>
 
       {!hideLayout && <Footer />}
