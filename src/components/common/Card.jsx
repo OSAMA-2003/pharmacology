@@ -26,7 +26,7 @@ const Card = ({
           <img
             src={item.image}
             alt={item.title}
-            className="w-full h-full object-cover pointer-events-none"
+            className="w-full h-full object-cover pointer-events-none object-top"
             draggable="false"
           />
         </div>

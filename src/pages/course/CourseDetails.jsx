@@ -20,7 +20,6 @@ const CourseDetails = () => {
     // جلب البيانات بناءً على المعرف
     const foundCourse = coursesData.find((c) => String(c.id || c._id) === id);
     if (foundCourse) setCourse(foundCourse);
-    window.scrollTo(0, 0);
   }, [id]);
 
   if (!course) return <div className="min-h-screen bg-[#0a051d] flex items-center justify-center text-white">جاري التحميل...</div>;

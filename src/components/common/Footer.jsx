@@ -53,6 +53,11 @@ const Footer = () => {
               </Link>
             </li>
             <li>
+              <Link to="/courses" className="hover:text-white transition duration-300">
+                الكورسات
+              </Link>
+            </li>
+            <li>
               <Link to="/products" className="hover:text-white transition duration-300">
                 المنتجات
               </Link>
@@ -116,7 +121,7 @@ const Footer = () => {
           <div className="space-y-4 text-gray-300 text-sm md:text-base w-full">
             <a href="tel:01510201020" className="flex items-center justify-center md:justify-start gap-3 hover:text-white transition duration-300">
               <FaPhone className="text-lg transform scale-x-[-1]" />
-              <span dir="ltr">01510201020</span>
+              <span dir="ltr">+20-1510201020</span>
             </a>
 
             <a href="mailto:info@dr-ahmed.com" className="flex items-center justify-center md:justify-start gap-3 hover:text-white transition duration-300">
@@ -130,7 +135,7 @@ const Footer = () => {
       <hr className="mt-12 mb-6 border-gray-400 opacity-30" />
 
       <p className="text-center text-gray-300 text-sm">
-        © 2024  فارمكولوجي - جميع الحقوق محفوظة.
+        © 2026  فارمكولوجي - جميع الحقوق محفوظة.
       </p>
     </footer>
   );

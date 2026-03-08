@@ -10,7 +10,7 @@ const CTA = () => {
       <AnimatedText >
           <div className="my-4 md:mt-20 max-w-7xl mx-auto relative bg-gradient-to-t from-[#1D014B] via-[#3A1F66] to-[#E4DFE6]  rounded-[2rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between shadow-sm border border-blue-50 ">
             <div className="w-1/1 text-center md:text-right z-10 relative">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
                 هل تحتاج إلى إرشاد متخصص لحالتك؟
               </h2>
               <p className=" font-medium mb-8 text-md md:text-2xl leading-relaxed max-w-xl">

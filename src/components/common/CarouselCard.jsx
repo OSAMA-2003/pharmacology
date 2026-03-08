@@ -34,6 +34,17 @@ const CarouselCard = ({
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/40 to-transparent transition-opacity duration-500 group-hover:opacity-90"></div>
 
+    <div
+          className="absolute top-[5%] right-6
+          bg-[#1D014B]
+          text-[#E4DFE6]
+          px-4 py-1.5 rounded-lg font-bold text-sm
+          shadow-lg
+          border border-[#4e2d8f]
+          z-10"
+        >
+          {item.price  || item.category}
+        </div>
 
         {/* Content - Positioned at the bottom */}
         <div className="absolute bottom-0 w-full p-6 flex flex-col text-start z-10">
@@ -53,12 +64,11 @@ const CarouselCard = ({
 
           {/* Meta Data Row */}
           <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-200 transition-transform duration-500 ease-out group-hover:translate-x-1 delay-100">
+          
+
+             
+
             
-            {(item.price || item.category) && (
-              <div className="flex items-center gap-1.5 font-medium">
-                <span>{item.price || item.category}</span>
-              </div>
-            )}
 
             {item.meta1 && (
               <div className="flex items-center gap-1.5">

@@ -94,7 +94,7 @@ const Blogs = () => {
                   item={{
                     image: blog.image,
                     title: blog.title,
-                    desc: blog.desc,
+                    desc: blog.content,
                     price: blog.category , 
                     meta1: blog.meta1,             
                     meta2: blog.meta2,        

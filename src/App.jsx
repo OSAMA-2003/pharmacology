@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ToastContainer } from "react-toastify";
@@ -39,11 +39,13 @@ const App = () => {
   // Hide Navbar and Footer on login page
   const hideLayout = location.pathname === "/login";
 
+  // Scroll to top on every route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="w-full min-h-screen flex flex-col">
-      {/* Scroll to top on route change */}
-     
-
       {/* Toast Notifications */}
       {/* 
       <ToastContainer

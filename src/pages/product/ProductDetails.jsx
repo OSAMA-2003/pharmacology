@@ -17,7 +17,6 @@ const ProductDetails = () => {
   useEffect(() => {
     const foundProduct = productsData.find((p) => String(p.id || p._id) === id);
     if (foundProduct) setProduct(foundProduct);
-    window.scrollTo(0, 0);
   }, [id]);
 
   if (!product) return <div className="min-h-screen  flex items-center justify-center text-white">جاري التحميل...</div>;

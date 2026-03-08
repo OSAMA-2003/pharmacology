@@ -246,16 +246,15 @@ const Login = () => {
 
                       <div className="text-right" >
                         <label className="block text-white text-sm font-semibold mb-2">تاريخ الميلاد</label>
-                        <div className="relative">
+                        <div className="relative"  >
                           <input
                          
-                            type="text"
+                            type="date"
                             onFocus={(e) => (e.target.type = "date")}
                             onBlur={(e) => { if (!e.target.value) e.target.type = "text" }}
                             required
                             value={state.birthdate}
                             onChange={(e) => setState({ ...state, birthdate: e.target.value })}
-                            placeholder="ادخل تاريخ ميلادك"
                             className="w-full bg-[#1B113D]/50 border border-[#443068] rounded-xl p-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9853D8] text-right transition-colors"
                           />
                         </div>
