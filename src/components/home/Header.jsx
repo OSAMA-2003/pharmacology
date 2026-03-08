@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { FaInstagram, FaFacebookF, FaYoutube, FaTiktok } from "react-icons/fa";
 import { FaCalendarDays, FaChevronRight, FaChevronLeft } from "react-icons/fa6";
-import img1 from '../../assets/header-1.png';
-import img2 from "../../assets/header-2.jpg";
-import img3 from "../../assets/header-3.jpg";
-import img4 from "../../assets/header-4.jpg";
-import img5 from "../../assets/Dr ahmed V 1.png";
-import vid6 from "../../assets/Dr Ahmed.webp";
-import img7 from "../../assets/header-7.jpg";
+import img1 from '../../assets/1.webp';
+import img2 from "../../assets/2.webp";
+import img3 from "../../assets/3.webp";
+import img4 from "../../assets/4.webp";
+import img5 from "../../assets/5.webp";
+import img6 from "../../assets/6.webp";
+import img7 from "../../assets/7.webp";
+import img8 from "../../assets/8.webp";
+
 import Button from "../common/Button";
 
 // تحديث هيكل البيانات لدعم الصور والفيديوهات، وفصل الموبايل عن الديسكتوب
@@ -15,7 +17,7 @@ const initialData = [
   {
     id: 1,
     // Desktop Media (e.g., Video)
-    desktop: { url: img7, type: "img" },
+    desktop: { url: img1, type: "img" },
     // Mobile Media (e.g., Image specifically for phone)
     mobile: { url: img5, type: "img" },
     title: "ما بين الدواء والغذاء قصة.. سأحكيها لك.",
@@ -23,22 +25,22 @@ const initialData = [
   },
   {
     id: 2,
-    desktop: { url: img1, type: "image" },
-    mobile: { url: img5, type: "image" }, 
+    desktop: { url: img2, type: "image" },
+    mobile: { url: img6, type: "image" }, 
     title: "صحتك تبدأ من غذائك",
     des: "برامج غذائية مصممة خصيصاً لتناسب احتياجاتك الصحية وأهدافك الشخصية بخطوات علمية مدروسة.",
   },
   {
     id: 3,
     desktop: { url: img3, type: "image" },
-    // mobile: { url: img3, type: "image" },
+    mobile: { url: img7, type: "image" },
     title: "الرعاية المتكاملة لحياتك",
     des: "نقدم لك استشارات شاملة تجمع بين الطب الحديث وأسلوب الحياة الصحي لضمان أفضل النتائج.",
   },
   {
     id: 4,
     desktop: { url: img4, type: "image" },
-    // mobile: { url: img4, type: "image" },
+    mobile: { url: img8, type: "image" },
     title: "خطتك الدوائية بأمان",
     des: "تقييم شامل لأدويتك ومكملاتك الغذائية لتجنب التفاعلات الضارة وتحقيق أقصى استفادة.",
   },
@@ -148,7 +150,7 @@ const Header = () => {
             <div className="absolute inset-0 bg-gradient-to-l from-black/80 to-black/20 z-10 pointer-events-none"></div>
 
             {/* Content Area */}
-            <div className="carousel-content absolute top-2/3 md:top-1/2 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
+            <div className="carousel-content absolute top-5/7 md:top-1/2 right-[5%] md:right-[10%] w-[90%] md:w-full max-w-[600px] -translate-y-1/2 text-right z-20">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 md:mb-6 text-white drop-shadow-lg pointer-events-none">
                 {item.title}
               </h1>
@@ -166,7 +168,7 @@ const Header = () => {
       </div>
 
       {/* Controls */}
-      <div className="absolute bottom-3 md:bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl">
+      <div className="absolute bottom-2 md:bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl">
         <Button onClick={handlePrev} className="w-10 h-10 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-transform">
           <FaChevronRight />
         </Button>

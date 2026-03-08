@@ -4,13 +4,8 @@ import cross_icon from "./cross_icon.png";
 import header_img from "./header_img.jpg";
 
 import verified_icon from "./verified_icon.svg";
-import srvs1 from "./img1.png";
-import srvs2 from "./img2.png";
-import srvs3 from "./img3.png";
-import srvs4 from "./img4.png";
-import srvs5 from "./img5.png";
-import srvs6 from "./img6.png";
-import logo from "./logo.png";
+
+// import logo from "./logo.png";
 import logo2 from "./logo-2.png";
 import logoWhite from "./logo-white.png";
 import diet from "./diet.png";
@@ -33,13 +28,8 @@ export const assets = {
   dropdown_icon,
   header_img,
   verified_icon,
-  srvs1,
-  srvs2,
-  srvs3,
-  srvs4,
-  srvs5,
-  srvs6,
-  logo,
+
+  // logo,
   logo2,
   logoWhite,
   diet,
@@ -64,7 +54,6 @@ export const Medicalservices = [
     category: "nutrition",
     category_ar: "التغذية",
     description: "تشخيص وعلاج جميع أمراض القلب والأوعية",
-    image: srvs1,
     features: [
       "تقييم الحالة الغذائية",
       "وضع خطط غذائية شخصية",
@@ -78,7 +67,6 @@ export const Medicalservices = [
     category: "chronic-diseases",
     category_ar: "الأمراض المزمنة",
     description: "نقدم رعاية شاملة للمرضى الذين يعانون من أمراض مزمنة",
-    image: srvs2,
     features: [
       "علاج السكري وارتفاع الضغط",
       "خطة غذائية ونمط حياة صحي",
@@ -92,7 +80,6 @@ export const Medicalservices = [
     category: "cardiology",
     category_ar: "أمراض القلب",
     description: "فريق متخصص لعلاج ومتابعة مشاكل القلب",
-    image: srvs3,
     features: [
       "فحوصات شاملة للقلب",
       "تخطيط القلب والموجات الصوتية",
@@ -106,7 +93,6 @@ export const Medicalservices = [
     category: "gynecology",
     category_ar: "أمراض النساء والولادة",
     description: "رعاية طبية متكاملة للنساء من جميع الأعمار",
-    image: srvs4,
     features: ["متابعة الحمل والولادة", "تنظيم الأسرة", "علاج أمراض النساء"],
     fees: 150,
   },
@@ -116,7 +102,6 @@ export const Medicalservices = [
     category: "pediatrics",
     category_ar: "طب الأطفال",
     description: "نقدم خدمات طبية متخصصة للأطفال لضمان صحتهم",
-    image: srvs5,
     features: [
       "التطعيمات الأساسية",
       "متابعة النمو والتطور",
@@ -130,7 +115,6 @@ export const Medicalservices = [
     category: "ophthalmology",
     category_ar: "طب العيون",
     description: "تشخيص وعلاج جميع مشاكل العين",
-    image: srvs6,
     features: [
       "فحص النظر والقرنية",
       "علاج الالتهابات والحساسية",
@@ -144,7 +128,6 @@ export const Medicalservices = [
     category: "orthopedics",
     category_ar: "طب العظام",
     description: "تشخيص وعلاج جميع مشاكل العظام",
-    image: srvs2,
     features: [
       "فحص وتشخيص أمراض العظام",
       "علاج الالتهابات والإصابات",
@@ -158,7 +141,6 @@ export const Medicalservices = [
     category: "neurology",
     category_ar: "طب الأعصاب",
     description: "تشخيص وعلاج جميع مشاكل الأعصاب",
-    image: srvs2,
     features: [
       "تشخيص أمراض الجهاز العصبي",
       "علاج الصداع المزمن والصرع",
@@ -172,7 +154,6 @@ export const Medicalservices = [
     category: "physiotherapy",
     category_ar: "العلاج الطبيعي",
     description: "تشخيص وعلاج جميع مشاكل الحركة والتأهيل",
-    image: srvs2,
     features: [
       "إعادة التأهيل بعد الإصابات",
       "علاج مشاكل المفاصل والعضلات",
@@ -186,7 +167,6 @@ export const Medicalservices = [
     category: "alternative-medicine",
     category_ar: "الطب البديل",
     description: "تشخيص وعلاج باستخدام الطب البديل",
-    image: srvs2,
     features: ["العلاج بالأعشاب", "العلاج بالحجامة", "الوخز بالإبر"],
     fees: 150,
   },
